@@ -1,20 +1,3 @@
-<p align="center">
-  <img src="SAWA/static/assets/full_logo.jpg" alt="SAWA Logo" width="140">
-</p>
-<h1 align="center">SAWA — AI‑Powered Online Meetings Platform</h1>
-<p align="center">
-  Real‑time video meetings with smart captioning, optional translation & dubbing, and a clean dashboard experience.
-</p>
-
-<p align="center">
-  <a href="https://img.shields.io/badge/Python-3.11%2B-blue"> </a>
-  <a href="https://img.shields.io/badge/Django-4.x-092E20"> </a>
-  <a href="https://img.shields.io/badge/Agora-RTC-brightgreen"> </a>
-  <a href="https://img.shields.io/badge/ElevenLabs-TTS%2FTTS-orange"> </a>
-  <a href="https://img.shields.io/badge/Bootstrap-5-7952B3"> </a>
-</p>
-
----
 
 ## ✨ Overview
 **SAWA** is a full‑stack web application for hosting and joining online meetings. It leverages the **Agora Web SDK** for real‑time audio/video and integrates **captioning, language detection, translation, and optional dubbing** to make conversations more inclusive. Users can sign up with email (OTP supported), manage profiles & preferences, schedule or start instant meetings, and access a lightweight **dashboard** for activity and basic admin controls.
