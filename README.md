@@ -1,107 +1,241 @@
-# SAWA
-Online Meetings Platform
-_____________________________________________________________________
-## 💻 Tech Stack
+<p align="center">
+  <img src="SAWA/static/assets/full_logo.jpg" alt="SAWA Logo" width="140">
+</p>
+<h1 align="center">SAWA — AI‑Powered Online Meetings Platform</h1>
+<p align="center">
+  Real‑time video meetings with smart captioning, optional translation & dubbing, and a clean dashboard experience.
+</p>
 
-**Backend:**  
-- Django
+<p align="center">
+  <a href="https://img.shields.io/badge/Python-3.11%2B-blue"> </a>
+  <a href="https://img.shields.io/badge/Django-4.x-092E20"> </a>
+  <a href="https://img.shields.io/badge/Agora-RTC-brightgreen"> </a>
+  <a href="https://img.shields.io/badge/ElevenLabs-TTS%2FTTS-orange"> </a>
+  <a href="https://img.shields.io/badge/Bootstrap-5-7952B3"> </a>
+</p>
 
-**Frontend:**  
-- HTML  
-- CSS  
-- JavaScript  
-- Bootstrap
+---
 
-**Real-Time & Media:**  
-- [Agora](https://www.agora.io/) – Real-time audio/video communication  
-- [ElevenLabs](https://www.elevenlabs.io/) – AI voice & dubbing integration
+## ✨ Overview
+**SAWA** is a full‑stack web application for hosting and joining online meetings. It leverages the **Agora Web SDK** for real‑time audio/video and integrates **captioning, language detection, translation, and optional dubbing** to make conversations more inclusive. Users can sign up with email (OTP supported), manage profiles & preferences, schedule or start instant meetings, and access a lightweight **dashboard** for activity and basic admin controls.
 
-_____________________________________________________________________
-# 📋 Project Tasks Checklist
+> This README replaces the legacy version and reflects the current codebase and structure.
 
-This checklist tracks the key tasks and progress of the project.
+---
 
-## ✅ Basic Setup
-- [x] Initialize Git repository
-- [x] Create project structure
-- [x] Add `.gitignore` file
-- [x] Setup `README.md`
+## 🧩 Key Features
+- **Authentication & Security**
+  - Email & password login with **OTP** verification during sign‑up
+  - **Forgot password** flow via email
+  - **Google sign‑in** via `django-allauth` (optional, project‑ready)
+  - Customizable **user roles** and **system logs** for auditing
 
-## 🛠️ Development
-- [x] Design database schema
-### Accounts App
-- [x] Implement authentication system
-- [ ] Complete authentication using google
-- [x] OTP for authentication
-- [x] Forget Password
-- ~~[ ] Suscribtion logic " Canceled"~~
-### Meetings App
-- [x] Integrate ~~WebRTC~~ Agora
-- [x] Meeting Control Logic
-- [x] Join Meeting Logic
-- [x] Host Meeting Logic
-- [x] Leave meeting Logic
-- [x] Integration of Eleven Labs
-- [x] Approach 1 : Dubbing
-- [x] Approach 2 : tts & stt
-- [x] catch source and target language
-- [ ] change stt model
-- [ ] subtitles
-- [x] particpants list
-- [x] Settings 
-### Support App
-- [x] Logic
-### Landing App
-- [ ] Pricing plans logic "This will not be implemented will be coming soon instead"
-### Dashboard App
-- [x] Meeting Link Problem "Ajax Problem"
-- [x] Waiting room for host not start meeting yet "requires change in meeting model"
-- [x] Join as guest
+- **Meetings**
+  - Create **instant** or **scheduled** meetings
+  - Join via unique **meeting ID/link** (generated with `shortuuid`)
+  - **Waiting room** experience before the host starts
+  - Basic host/participant controls (mute/unmute, camera on/off, leave/end)
+  - **Room member** management endpoints to track participants
 
-## 🎨 UI/UX & Front
-### Landing Page
-- [ ] Scroll animation when Navigating sections
-- [ ] Editing Section Data
-- [ ] Linking Footer 
-### Sign UP
-- [ ] Enhance Responsiveness 
-### Login
-- [ ] Find a proper image for login
-- [ ] Enhance Responsiveness
-### Dashboard
-- [x] Make the active icon black and home is to normal color at drawer.
-- [ ] Enhance Responsiveness
-- [ ] Improve drop down menus for profile and notifications
-- [ ] Link Footer
-- [x] Meeting Link Problem "Ajax"
-### Meeting Room
-- [x] Push the page after linking
-- [ ] Fix setting front
-- [x] video icon and user name
-- [x] share screen
-- [ ] improve front end
-- [ ] transcript
-- [x] drop down dubbing
-### Profile Page
-- No Current Problems
-### Settings
-- [ ] Refactor the page
-### Help
-- [ ] Refactor the page
-### Missing Pages or sections
-- [x] OTP Page for Signing UP
-- [x] Pages for forgetting Password using OTP
-- [x] Link the navbar in both signup & login files
+- **Real‑Time Media**
+  - **Agora Web SDK** (`AgoraRTC`) for audio/video
+  - Backend **token issuing** endpoint for secure channel access
 
-## 🚀 Deployment
-- [x] Choose hosting platform
-- [x] Deploy application
-- [x] Monitor and maintain
+- **Captioning, Translation & Dubbing (Experimental)**
+  - Browser audio capture → server caption generation endpoint
+  - **Language detection** for source audio
+  - Optional **translation** to a target language
+  - **Dubbing** pipeline integrating **ElevenLabs** for TTS
+  - Endpoints exposed for client integration:
+    - `POST /meetings/translate/audio/`
+    - `POST /meetings/generate_caption/`
 
-## 📚 Documentation
-- [ ] Complete project documentation
-- [ ] Complete Project Poster
+- **Dashboard & Admin**
+  - User dashboard with upcoming/recent meetings
+  - **Admin Dashboard** (templates included): user management, meeting oversight, translation usage, platform settings, support & feedback, and **system logs**
+
+- **Support & Notifications**
+  - **Support tickets** (open/close) and a simple **notification** model
+
+- **Profiles & Settings**
+  - Profile page with avatar upload/remove + password update
+  - **Meeting defaults** and accessibility preferences (e.g., auto‑mute mic/video on join, enable captions/translation)
+
+---
+
+## 🏗️ Architecture
+- **Backend**: Django 4.x (Python 3.11+), email via SMTP, OTP, `django-allauth` for Google OAuth, optional **Django Channels** ready for WebSockets.
+- **Realtime**: **Agora** Web SDK in the browser; backend endpoint for **token** issuance.
+- **AI/Audio**: Server‑side endpoints for captioning/translation; **ElevenLabs** for text‑to‑speech dubbing.
+- **Data**: Default **SQLite** for local development (file `db.sqlite3`).
+- **Frontend**: HTML templates + **Bootstrap** CSS + vanilla JS; custom styles and meeting UI in `static/`.
+
+**Main Apps**
+- `accounts/` – auth, OTP, profile, settings
+- `meetings/` – meeting CRUD, join/leave flows, Agora integration, captions/translation
+- `dashboard/` – user & admin dashboard pages, logs
+- `support/` – help & support tickets
+- `landing/` – public landing page
+
+**Key Templates**
+- `templates/Landing Page/main.html`
+- `templates/Login & Sign up/{login,signup}.html`
+- `templates/meetings/{room,waiting_room}.html`
+- `templates/Profile & Settings/{profile,settings}.html`
+- `templates/Admin Dashboard/*.html`
+
+---
+
+## 🗺️ Project Structure (trimmed)
+```text
+SAWA/
+├─ manage.py
+├─ SAWA/                  # project settings, urls, asgi/wsgi
+├─ accounts/              # custom user, OTP, settings
+├─ meetings/              # meetings, Agora token & room-member endpoints
+├─ dashboard/             # dashboards, analytics, system logs
+├─ support/               # support tickets, notifications
+├─ landing/               # landing page
+├─ templates/             # HTML templates (Landing, Meetings, Admin, etc.)
+└─ static/                # css, js (Agora), images, assets
+```
+
+---
+
+## ⚙️ Getting Started
+
+### 1) Prerequisites
+- Python **3.11+**
+- A virtual environment tool (`venv`, `conda`, etc.)
+- **Agora** account (for `APP_ID` and **App Certificate** if you enable token issuance)
+- **ElevenLabs** account & API key (for dubbing)
+- SMTP credentials (for OTP & password reset emails)
+- (Optional) Google OAuth credentials for `django-allauth`
+
+### 2) Install
+```bash
+# from the repo root
+python -m venv .venv
+. .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 3) Environment
+Create a **.env** file at `SAWA/SAWA/.env` (or the project root) with:
+```dotenv
+# Django
+DEBUG=True
+SECRET_KEY=your-django-secret
+ALLOWED_HOSTS=127.0.0.1,localhost
+
+# Email (SMTP)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=you@example.com
+EMAIL_HOST_PASSWORD=your-app-password
+EMAIL_USE_TLS=True
+
+# Agora
+AGORA_APP_ID=your-agora-app-id
+AGORA_APP_CERTIFICATE=your-agora-app-certificate
+
+# ElevenLabs
+ELEVENLABS_API_KEY=your-elevenlabs-api-key
+ELEVENLABS_VOICE_ID=EXAVITQu4vr4xnSDxMaL   # or your preferred voice
+
+# Google OAuth (django-allauth)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+> 🔐 **Security note**: Move any hard‑coded IDs/secrets from JS or Python files into environment variables. Avoid committing secrets (e.g., OAuth client JSON) inside `static/assets`.
+
+### 4) Database & Superuser
+```bash
+python SAWA/manage.py migrate
+python SAWA/manage.py createsuperuser   # optional, for Django admin
+```
+
+### 5) Run
+```bash
+python SAWA/manage.py runserver
+```
+Visit `http://127.0.0.1:8000/`
+
+> For production or WebSocket workloads, run an ASGI server such as **Daphne** or **Uvicorn** and configure Channels.
 
 
 ---
 
+## 🔌 Important Endpoints (non‑exhaustive)
+- **Auth & Profile**
+  - `/login/`, `/signup/`, `/logout/`
+  - `/verify-otp/`, `/profile/`, `/profile/update-password/`
+  - `/settings/`, `/settings/update/`
+- **Meetings**
+  - `POST /meetings/create/`, `GET /meetings/join/<meeting_id>/`
+  - `POST /meetings/leave/<meeting_id>/`, `GET /meetings/waiting-room/<meeting_id>/`
+  - `GET /meetings/get_token/` — Agora token
+  - `POST /meetings/create_member/`, `GET /meetings/get_member/`, `DELETE /meetings/delete_member/`
+  - `GET /meetings/check_status/<meeting_id>/`
+- **Captioning & Dubbing**
+  - `POST /meetings/translate/audio/`
+  - `POST /meetings/generate_caption/`
+- **Dashboard & Admin**
+  - `/dashboard/` (user)
+  - `/dashboard/admin-dashboard/` (admin views & tools)
+- **Support**
+  - `/support/help/`
+
+---
+
+## 🧪 Tech Stack
+**Backend**
+- Django 4.x, Django Auth, `django-allauth` (Google)
+- OTP via email (SMTP)
+- (Ready for) Django Channels (WebSockets)
+- SQLite (dev) — switch to Postgres/MySQL in production
+
+**Frontend**
+- HTML templates + **Bootstrap** + vanilla JS
+- Meeting UI powered by `static/js/streams.js` and **AgoraRTC**
+
+**AI / Audio**
+- **ElevenLabs** for TTS dubbing
+- Language detection (`langdetect`), audio utils (`pydub`)
+- (Optional) integration hooks for external STT/translation services
+
+---
+
+## ✅ Status & To‑Do
+- [x] OTP sign‑up + Forgot Password
+- [x] Instant & scheduled meetings with unique IDs
+- [x] Waiting room, host/participant roles
+- [x] Agora integration & token endpoint
+- [x] Captioning & translation endpoints
+- [x] Admin dashboard templates & system logs
+- [ ] Harden production settings (ASGI, Channels, HTTPS, media/static)
+- [ ] CI/CD & containerization
+- [ ] Comprehensive unit/integration tests
+- [ ] Full documentation for admin workflows
+
+---
+
+## 📦 Deployment Notes
+- Use **ASGI** (e.g., Daphne/Uvicorn + Nginx) for real‑time features
+- Set all secrets via environment variables
+- Configure a production database and email provider
+- Restrict static/media exposure; remove confidential files from `static/assets`
+
+---
+
+## 🙏 Acknowledgements
+- **Agora** for low‑latency RTC
+- **ElevenLabs** for cutting‑edge TTS
+- **Django** community & packages used in this project
+
+---
+
+## 📄 License
+No open‑source license specified. All rights reserved by the project authors.
