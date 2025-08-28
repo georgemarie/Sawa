@@ -1,0 +1,1518 @@
+{% load static %}
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" />
+  <title>SAWA - Home</title>
+  <link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/png">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    a {
+      transition: color 0.3s ease;
+    }
+
+    button,
+    .eff {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .eff:hover,
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111418;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #637588;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #111418;
+      font-weight: 500;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e8eef3;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #1980e6;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .option-card {
+      border: 1px solid #e8eef3;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-card:hover {
+      border-color: #1980e6;
+      background-color: #f8fafc;
+    }
+
+    .option-card.selected {
+      border-color: #1980e6;
+      background-color: #f0f7ff;
+    }
+
+    .option-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .option-description {
+      font-size: 14px;
+      color: #637588;
+    }
+
+    .slide-down {
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .profile-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      margin-top: 0.5rem;
+      width: 12rem;
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    /* Styling for the logout button */
+    .logout-btn {
+      color: #ff5a5f;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logout-widget-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .notification-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      margin-top: 0.5rem;
+      width: 16rem;
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+    }
+
+    .notification-dropdown.show {
+      display: block;
+    }
+
+    .notification-item {
+      padding: 4px 16px;
+      border-bottom: 1px solid #e8eef3;
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-empty {
+      padding: 16px;
+      text-align: center;
+      color: #637588;
+    }
+
+    .notification-icon {
+      color: #111418;
+    }
+
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #1980e6;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #drawer {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100vw;
+        min-height: calc(100vh - 80px);
+        height: calc(100vh - 80px);
+        min-width: 0;
+        max-width: 100vw;
+        transform: translateX(-100%);
+        z-index: 40;
+        transition: transform 0.3s ease;
+      }
+      #drawer.show {
+        transform: translateX(0);
+      }
+      #mainContent {
+        margin-left: 0 !important;
+      }
+      .layout-content-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .modal-content {
+        max-width: 95vw;
+        padding: 12px;
+      }
+      .modal {
+        align-items: flex-end;
+      }
+      .flex-row.grow {
+        flex-direction: column;
+      }
+      .meeting-link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .meeting-title, .meeting-time, .meeting-date {
+        font-size: 15px;
+      }
+      .footer {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header
+    class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e8eef3] px-10 py-3 bg-white fixed top-0 left-0 w-full z-50 sm:px-10 px-4">
+    <div class="flex items-center gap-4 text-[#0e161b]">
+      <button id="drawerToggle" class="size-6 sm:size-6 size-8">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+          <a href="/" class="block sm:hidden hover:text-[#1f93e0] transition-colors eff">
+      <img src="{% static 'assets/img/logo.png' %}" alt="Logo" style="height: 80px;" />
+    </a>
+
+    <a href="/" class="hidden sm:block hover:text-[#1f93e0] transition-colors eff">
+                    <img src="{% static 'assets/img/complete_logo.png' %}" alt="Logo" style="height: 60px;" />
+    </a>
+    </div>
+    <div class="flex flex-1 justify-end gap-8">
+      <div class="flex gap-2">
+        <!-- Help Button -->
+        <a href="/support/help"
+          class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+          title="Help">
+          <div class="text-[#0e161b]" data-icon="Question" data-size="20px" data-weight="regular">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+              viewBox="0 0 256 256">
+              <path
+                d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z">
+              </path>
+            </svg>
+          </div>
+        </a>
+
+        <!-- Settings Button -->
+        <a href="{%url 'settings' %}"
+          class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+          title="Settings">
+          <div class="text-[#0e161b]" data-icon="Gear" data-size="20px" data-weight="regular">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+              viewBox="0 0 256 256">
+              <path
+                d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z">
+              </path>
+            </svg>
+          </div>
+        </a>
+
+
+        <!-- Notification Button with Dropdown -->
+        <div class="relative">
+          <button id="notificationButton"
+            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+            title="Notifications">
+            <div class="notification-icon" data-icon="Bell" data-size="20px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+                viewBox="0 0 256 256">
+                <path
+                  d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z">
+                </path>
+              </svg>
+            </div>
+          </button>
+
+          <!-- Notification Dropdown -->
+          <div id="notificationDropdown"
+            class="notification-dropdown mt-2 w-64 bg-white rounded-xl shadow-lg py-1 z-50 border border-[#e8eef3]">
+            <div class="notification-empty">
+              No current notifications
+            </div>
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const notificationButton = document.getElementById('notificationButton');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+
+            // Hide dropdown initially
+            notificationDropdown.classList.remove('show');
+
+            notificationButton.addEventListener('click', (e) => {
+              e.stopPropagation();
+              notificationDropdown.classList.toggle('show');
+            });
+
+            // Close dropdown on outside click
+            document.addEventListener('click', (e) => {
+              if (
+                notificationDropdown &&
+                !notificationDropdown.contains(e.target) &&
+                !notificationButton.contains(e.target)
+              ) {
+                notificationDropdown.classList.remove('show');
+              }
+            });
+          });
+        </script>
+
+
+
+        <!-- Profile Dropdown - Replace the existing profile image div -->
+        <div class="relative">
+          <button id="profileDropdownButton" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+            style='background-image: url("{% if user.profile_picture %}{{ user.profile_picture.url }}{%elif user.gender == "M" %}{% static "assets/img/male-avatar.png" %}{% else %}{% static "assets/img/female-avatar.png" %}{% endif %}");'
+            </button>
+
+            <!-- Dropdown menu -->
+            <div id="profileDropdown"
+              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-50 border border-[#e8eef3]">
+              <div class="px-4 py-2 border-b border-[#e8eef3]">
+                <p class="text-sm font-medium text-[#111418] truncate max-w-[200px]">{{ user.first_name }} {{ user.last_name }}</p>
+                <p class="text-xs text-[#637588] truncate max-w-[200px]">{{ user.email }}</p>
+              </div>
+              <a href="/profile" class="block px-4 py-2 text-sm text-[#111418] hover:bg-[#f0f2f4]">Profile</a>
+              <a href="/logout" class="block px-4 py-2 text-sm logout-btn hover:bg-[#fff0f0]">
+                Logout
+              </a>
+            </div>
+        </div>
+
+
+      </div>
+  </header>
+  <div class="relative flex min-h-screen flex-col bg-white overflow-x-hidden"
+    style='font-family: Inter, "Noto Sans", sans-serif;'>
+    <div class="flex flex-row grow">
+  <div id="drawer"
+  class="gap-1 px-6 py-5 min-h-screen bg-white fixed top-[64px] left-0 w-80 z-40 transform transition-transform translate-x-0">
+        <div class="layout-content-container flex flex-col">
+          <div class="flex h-full flex-col justify-between p-4 mt-4">
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <a href="/dashboard"
+                  class="flex items-center gap-3 px-3 py-2 rounded-xl {% if upcoming %} bg-[#f0f2f4] {% endif%}">
+                  <div class="text-[#111418]" data-icon="House" data-size="24px" data-weight="fill">
+                    {% if upcoming %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor"
+                      viewBox="0 0 256 256">
+                      <path
+                        d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53,0,1.14,1.14,0,0,0,.11.11l80,75.48A16,16,0,0,1,224,115.55Z">
+                      </path>
+                    </svg>
+                    {%else%}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor"
+                      viewBox="0 0 256 256">
+                      <path
+                        d="M219.3,106.3,139.3,34.6a20,20,0,0,0-26.6,0L36.7,106.3A16,16,0,0,0,32,117.5V208a16,16,0,0,0,16,16H96a8,8,0,0,0,8-8V168h48v48a8,8,0,0,0,8,8h48a16,16,0,0,0,16-16V117.5A16,16,0,0,0,219.3,106.3ZM208,208H168V168a16,16,0,0,0-16-16H104a16,16,0,0,0-16,16v40H48V117.5l80-71.7,80,71.7Z" />
+                    </svg>
+                    {%endif%}
+                  </div>
+                  <p class="text-[#111418] text-sm font-medium leading-normal">Home</p>
+                </a>
+                <a href="/dashboard/meetings"
+                  class="flex items-center gap-3 px-3 py-2 {% if history %} bg-[#f0f2f4] {% endif%}">
+                  <div class="text-[#111418]" data-icon="VideoCamera" data-size="24px" data-weight="regular">
+                    {% if history %}
+                    <img style="width: 24px; height: 24px;"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAc0lEQVR4nO2UwQmAMAxF3zLu0rhSd9O74BL27gYSESp4UAul6UH74N9KHk2bQOM39EAANCMBkJQgt7jGLCmBFshJB8zAYCEQYL2RFhF4YHu4VRGBvrStCajSIm/9yAfO8pteB20CxqqrQuKh3OIuJWh8mB0aCRADcbnLpwAAAABJRU5ErkJggg=="
+                      alt="video-call">
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor"
+                      viewBox="0 0 256 256">
+                      <path
+                        d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z">
+                      </path>
+                    </svg>
+                    {% endif %}
+                  </div>
+                  <p class="text-[#111418] text-sm font-medium leading-normal">Meetings</p>
+                </a>
+              </div>
+
+              <div class="flex flex-col gap-4 mt-4">
+                <!-- New Meeting Button - Updated to trigger modal -->
+                <button onclick="openNewMeetingModal()"
+                  class="eff flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 bg-[#1980e6] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#1468b5] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    viewBox="0 0 256 256" class="mr-2">
+                    <path
+                      d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-88a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z">
+                    </path>
+                  </svg>
+                  New Meeting
+                </button>
+
+                <!-- Join Meeting Button - Updated to trigger modal -->
+                <button onclick="openJoinMeetingModal()"
+                  class="eff flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 border border-[#1980e6] text-[#1980e6] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#f0f2f4] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    viewBox="0 0 256 256" class="mr-2">
+                    <path
+                      d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z">
+                    </path>
+                  </svg>
+                  Join Meeting
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="mainContent"
+        class="pt-[80px] layout-content-container flex flex-col flex-1 transition-all duration-300 sm:ml-80 ml-0 px-2 sm:px-0">
+        <!-- Message Section -->
+        <div id="message-container" class="px-4 py-3">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="slide-down rounded-xl p-4 text-sm font-medium leading-normal flex items-center
+                          {% if message.tags == 'success' %}
+                              bg-green-50 text-green-800 border border-green-200
+                          {% elif message.tags == 'error' %}
+                              bg-red-50 text-red-800 border border-red-200
+                          {% elif message.tags == 'warning' %}
+                              bg-yellow-50 text-yellow-800 border border-yellow-200
+                          {% else %}
+                              bg-blue-50 text-blue-800 border border-blue-200
+                          {% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              {% if message.tags == 'success' %}
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+              {% elif message.tags == 'error' %}
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd" />
+              {% elif message.tags == 'warning' %}
+              <path fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+              {% else %}
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd" />
+              {% endif %}
+            </svg>
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+
+
+
+        {% if upcoming %}
+<div class="mt-8 px-4 py-3">
+          <form method="get" action="{% url 'search' %}" class="flex gap-2 w-full max-w-xl mx-auto">
+            {% csrf_token %}
+            <label class="flex flex-col min-w-40 h-12 w-full">
+              <div
+                class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-md bg-white transition-shadow focus-within:shadow-lg">
+                <div
+                  class="text-[#637588] flex border-none bg-[#f0f2f4] items-center justify-center pl-4 rounded-l-xl border-r-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                      d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z">
+                    </path>
+                  </svg>
+                </div>
+                <input placeholder="Search" name="q" value="{{search_query|default:''}}"
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-full placeholder:text-[#637588] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" />
+                <input hidden type="text" name="type" value="upcoming">
+                <button type="submit" hidden></button>
+              </div>
+            </label>
+          </form>
+
+        </div>
+        <h3 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Upcoming Meetings
+        </h3>
+
+
+        {% if upcoming_meetings %}
+        {% for meeting in upcoming_meetings %}
+        <a href="#"
+          class="meeting-link flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f2f4] transition-colors"
+          data-meeting-id="{{ meeting.id }}">
+          <div class="flex items-center gap-4">
+            <div class="bg-[#1980e6] text-white flex items-center justify-center rounded-full h-14 w-14">
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                  <path d="M232,128a104.16,104.16,0,0,1-91.55,103.26,4,4,0,0,1-4.45-4V152h48a8,8,0,0,0,8-8V88a8,8,0,0,0-8-8H136V32a4,4,0,0,0-4.44-4A104.15,104.15,0,0,0,24.3,178.55,8,8,0,0,0,32,184a7.9,7.9,0,0,0,2.52-.42A88.15,88.15,0,0,0,120,40a8,8,0,0,1,8-8h16a8,8,0,0,1,8,8v40h16a8,8,0,0,1,8,8v16a8,8,0,0,1-8,8H152v72.88a88.19,88.19,0,0,0,71.67-85.81c0-1.34,0-2.67-.1-4A8,8,0,0,0,216,120a8.15,8.15,0,0,0-2.57.42A104.17,104.17,0,0,1,232,128Z"></path>
+                              </svg> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M216,40H200V24a8,8,0,0,0-16,0V40H72V24A8,8,0,0,0,56,24V40H40A16,16,0,0,0,24,56V216a16,16,0,0,0,16,16H128a8,8,0,0,0,0-16H40V104H216v16a8,8,0,0,0,16,0V56A16,16,0,0,0,216,40Zm0,48H40V56H216V88ZM248,184a56,56,0,1,1-56-56A56.06,56.06,0,0,1,248,184Zm-24,0a8,8,0,0,0-8-8H192V152a8,8,0,0,0-16,0v32a8,8,0,0,0,8,8h40A8,8,0,0,0,224,184Z" />
+              </svg>
+            </div>
+            <div class="flex flex-col justify-center">
+              <p class="meeting-title text-[#111418] text-base font-medium leading-normal line-clamp-1">{{ meeting.title}}</p>
+              <p class="meeting-time text-[#637588] text-sm font-normal leading-normal line-clamp-2">
+                {{ meeting.meeting_time|date:"g:i A" }}
+              </p>
+            </div>
+          </div>
+          <div class="shrink-0">
+            <p class="meeting-date text-[#637588] text-sm font-normal leading-normal">
+              {{meeting.get_day}}
+          </div>
+        </a>
+        {% endfor %}
+        {% else %}
+        <div class="flex flex-col items-center justify-center py-16 px-4 text-center bg-white rounded-xl mx-4">
+          <div class="bg-[#f0f2f4] rounded-full p-6 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#1980e6" viewBox="0 0 256 256">
+              <path
+                d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-44-56a28,28,0,1,0-28,28A28,28,0,0,0,164,152Zm-12,0a16,16,0,1,1-16-16A16,16,0,0,1,152,152Z">
+              </path>
+            </svg>
+          </div>
+          <h4 class="text-[#111418] text-xl font-bold mb-3">No meetings scheduled</h4>
+          <p class="text-[#637588] text-base mb-6 max-w-md mx-auto">
+            You don't have any upcoming meetings. Schedule a new one or join an existing meeting.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/new-meeting"
+              class="eff flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 bg-[#1980e6] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#1468b5] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"
+                class="mr-2">
+                <path
+                  d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-88a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z">
+                </path>
+              </svg>
+              New Meeting
+            </a>
+            <a href="/join-meeting"
+              class="eff flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 border border-[#1980e6] text-[#1980e6] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#f0f2f4] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"
+                class="mr-2">
+                <path
+                  d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z">
+                </path>
+              </svg>
+              Join Meeting
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        {% elif history %}
+        <div class="px-4 py-3">
+          <form method="get" action="{% url 'search' %}" class="flex gap-2 w-full max-w-xl mx-auto">
+            {% csrf_token %}
+            <label class="flex flex-col min-w-40 h-12 w-full">
+              <div
+                class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-md bg-white transition-shadow focus-within:shadow-lg">
+                <div
+                  class="text-[#637588] flex border-none bg-[#f0f2f4] items-center justify-center pl-4 rounded-l-xl border-r-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                      d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z">
+                    </path>
+                  </svg>
+                </div>
+                <input placeholder="Search" name="q" value="{{search_query|default:''}}"
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-full placeholder:text-[#637588] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" />
+                <input hidden type="text" name="type" value="history">
+                <button type="submit" hidden></button>
+              </div>
+            </label>
+          </form>
+        </div>
+        <h3 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Past Meetings</h3>
+
+        {% if past_meetings %}
+        {% for meeting in past_meetings %}
+        <a href="#"
+          class="meeting-link flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between hover:bg-[#f0f2f4] transition-colors"
+          data-meeting-id="{{ meeting.id }}">
+          <div class="flex items-center gap-4">
+            <div class="bg-[#1980e6] text-white flex items-center justify-center rounded-full h-14 w-14">
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                  <path d="M232,128a104.16,104.16,0,0,1-91.55,103.26,4,4,0,0,1-4.45-4V152h48a8,8,0,0,0,8-8V88a8,8,0,0,0-8-8H136V32a4,4,0,0,0-4.44-4A104.15,104.15,0,0,0,24.3,178.55,8,8,0,0,0,32,184a7.9,7.9,0,0,0,2.52-.42A88.15,88.15,0,0,0,120,40a8,8,0,0,1,8-8h16a8,8,0,0,1,8,8v40h16a8,8,0,0,1,8,8v16a8,8,0,0,1-8,8H152v72.88a88.19,88.19,0,0,0,71.67-85.81c0-1.34,0-2.67-.1-4A8,8,0,0,0,216,120a8.15,8.15,0,0,0-2.57.42A104.17,104.17,0,0,1,232,128Z"></path>
+                              </svg> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M232.49,64.49a12,12,0,0,0-12.11-.31L180,85.18V80a24,24,0,0,0-24-24H40A24,24,0,0,0,16,80V176a24,24,0,0,0,24,24H156a24,24,0,0,0,24-24v-5.18l40.38,21A12,12,0,0,0,244,180V76A12,12,0,0,0,232.49,64.49ZM160,176a4,4,0,0,1-4,4H40a4,4,0,0,1-4-4V80a4,4,0,0,1,4-4H156a4,4,0,0,1,4,4Zm64-4.82-40-20.82V105.64l40-20.82Z" />
+              </svg>
+
+            </div>
+            <div class="flex flex-col justify-center">
+              <p class="meeting-title text-[#111418] text-base font-medium leading-normal line-clamp-1">{{ meeting.title}}</p>
+              <p class="meeting-time text-[#637588] text-sm font-normal leading-normal line-clamp-2">
+                {{ meeting.meeting_time|date:"g:i A" }}
+              </p>
+            </div>
+          </div>
+          <div class="shrink-0">
+            <p class="meeting-date text-[#637588] text-sm font-normal leading-normal">
+              {{meeting.get_day}}
+            </p>
+          </div>
+        </a>
+        {% endfor %}
+        {% else %}
+        <div class="flex flex-col items-center justify-center py-16 px-4 text-center bg-white rounded-xl mx-4">
+          <div class="bg-[#f0f2f4] rounded-full p-6 mb-6">
+            <!-- New Icon for Past Meetings -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#1980e6" viewBox="0 0 256 256">
+              <path
+                d="M128,24A104.12,104.12,0,0,0,24,128,104.12,104.12,0,0,0,128,232,104.12,104.12,0,0,0,232,128,104.12,104.12,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM116,128V80a8,8,0,0,1,16,0v48h44a8,8,0,0,1,0,16H128A8,8,0,0,1,116,128Z">
+              </path>
+            </svg>
+          </div>
+          <h4 class="text-[#111418] text-xl font-bold mb-3">No meetings</h4>
+          <p class="text-[#637588] text-base mb-6 max-w-md mx-auto">
+            You haven't hosted or joined any meetings yet. Schedule a new meeting or join an existing one to get
+            started.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/new-meeting"
+              class="eff flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 bg-[#1980e6] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#1468b5] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"
+                class="mr-2">
+                <path
+                  d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-88a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z">
+                </path>
+              </svg>
+              New Meeting
+            </a>
+            <a href="/join-meeting"
+              class="eff flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 border border-[#1980e6] text-[#1980e6] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#f0f2f4] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"
+                class="mr-2">
+                <path
+                  d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z">
+                </path>
+              </svg>
+              Join Meeting
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="flex flex-col items-center justify-center h-full min-h-[calc(100vh-80px)] text-center px-4">
+          <div class="max-w-md mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#1980e6" viewBox="0 0 256 256"
+              class="mx-auto mb-6">
+              <path
+                d="M240,112H229.2L201.42,49.5A16,16,0,0,0,186.8,40H69.2a16,16,0,0,0-14.62,9.5L26.8,112H16a8,8,0,0,0,0,16h8v80a16,16,0,0,0,16,16H64a16,16,0,0,0,16-16V192h96v16a16,16,0,0,0,16,16h24a16,16,0,0,0,16-16V128h8a8,8,0,0,0,0-16ZM69.2,56H186.8l24.89,56H44.31ZM64,208H40V192H64Zm128,0V192h24v16Zm24-32H40V128H216ZM56,152a8,8,0,0,1,8-8H80a8,8,0,0,1,0,16H64A8,8,0,0,1,56,152Zm112,0a8,8,0,0,1,8-8h16a8,8,0,0,1,0,16H176A8,8,0,0,1,168,152Z">
+              </path>
+            </svg>
+            <h2 class="text-[#111418] text-2xl font-bold leading-tight mb-2">Coming Soon</h2>
+            <p class="text-[#637588] text-base font-normal leading-normal mb-6">We're working hard to bring you this
+              feature. Stay tuned for updates!</p>
+            <button
+              class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1980e6] text-white text-sm font-bold leading-normal tracking-[0.015em] mx-auto">
+              <span class="truncate">Notify Me</span>
+            </button>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <script>
+        // Auto-dismiss messages after 5 seconds
+        setTimeout(() => {
+          const messageContainer = document.getElementById('message-container');
+          if (messageContainer) {
+            messageContainer.style.transition = 'opacity 0.5s ease';
+            messageContainer.style.opacity = '0';
+            setTimeout(() => messageContainer.remove(), 500); // Remove the element after fade-out
+          }
+        }, 5000); // 5 seconds
+      </script>
+
+    </div>
+    <footer class="flex justify-center">
+      <div class="flex max-w-[960px] flex-1 flex-col w-full px-2 sm:px-0">
+        <footer class="flex flex-col gap-6 px-5 py-10 text-center @container">
+          <div class="flex flex-wrap items-center justify-center gap-6 @[480px]:flex-row @[480px]:justify-around">
+            <a class="text-[#637588] text-base font-normal leading-normal min-w-40" href="#">Privacy Policy</a>
+            <a class="text-[#637588] text-base font-normal leading-normal min-w-40" href="#">Terms of Service</a>
+          </div>
+          <p class="text-[#637588] text-base font-normal leading-normal">2025, SAWA</p>
+        </footer>
+      </div>
+    </footer>
+  </div>
+  <!-- Join Meeting Modal -->
+  <form method="POST" action="{% url 'join_meeting_outer' %}"
+    class="flex flex-col min-w-40 h-14 w-full max-w-[480px] @[480px]:h-16">
+    {% csrf_token %}
+    <div id="joinMeetingModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Join a Meeting</h3>
+          <button class="close-btn" onclick="closeModal('joinMeetingModal')">&times;</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meeting Link or ID</label>
+          <input required type="text" name="meeting_id" id="meetingLink" class="form-input"
+            placeholder="Enter meeting link or meeting ID">
+        </div>
+        <div class="modal-actions">
+          <button
+            class="eff flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 border border-[#637588] text-[#637588] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#f0f2f4] transition-colors"
+            onclick="closeModal('joinMeetingModal')">
+            Cancel
+          </button>
+          <button type="submit"
+            class="eff flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1980e6] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#1468b5] transition-colors">
+            Join Meeting
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- New Meeting Modal - Step 1: Choose Type -->
+  <div id="newMeetingModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">New Meeting</h3>
+        <button class="close-btn" onclick="closeModal('newMeetingModal')">&times;</button>
+      </div>
+      <p style="margin-bottom: 16px; color: #637588;">Choose the type of meeting you want to create:</p>
+
+      <div class="option-card" onclick="selectOption(this, 'instant')">
+        <div class="option-title">Start an instant meeting</div>
+        <div class="option-description">Start immediately with a shareable link</div>
+      </div>
+
+      <div class="option-card" onclick="selectOption(this, 'scheduled')">
+        <div class="option-title">Schedule for later</div>
+        <div class="option-description">Set date, time and other details</div>
+      </div>
+
+      <div class="modal-actions">
+        <button
+          class="eff flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 border border-[#637588] text-[#637588] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#f0f2f4] transition-colors"
+          onclick="closeModal('newMeetingModal')">
+          Cancel
+        </button>
+        <button id="newMeetingNextBtn"
+          class="eff flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1980e6] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#1468b5] transition-colors"
+          onclick="proceedToSchedule()" disabled>
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Meeting Modal -->
+  <form id="scheduleMeetingModal" class="modal" method="POST" action="{% url 'create_meeting' %}">
+    {% csrf_token %}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Schedule Meeting</h3>
+        <button class="close-btn" type="button" onclick="closeModal('scheduleMeetingModal')">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Meeting Title</label>
+        <input type="text" name="title" class="form-input" placeholder="Team standup" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" name="scheduled_date" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Start Time</label>
+        <input type="time" name="meeting_time" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description (Optional)</label>
+        <textarea name="description" class="form-input" rows="3"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button"
+          class="eff flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 border border-[#637588] text-[#637588] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#f0f2f4] transition-colors"
+          onclick="backToMeetingType()">
+          Back
+        </button>
+        <button type="submit"
+          class="eff flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1980e6] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#1468b5] transition-colors">
+          Schedule Meeting
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Waiting Room Modal -->
+  <div id="waitingRoomModal" class="modal">
+    <div class="modal-content">
+      <div class="text-center">
+        <!-- Loading Spinner -->
+        <div class="flex justify-center mb-6">
+          <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Meeting Info -->
+        <h3 id="waitingMeetingTitle" class="text-xl font-bold text-gray-800 mb-2"></h3>
+        <p class="text-gray-600 mb-6">Waiting for host to start the meeting...</p>
+
+        <!-- Status Message -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div class="flex items-center justify-center space-x-2">
+            <div class="w-2 h-2 bg-blue-500 rounded-full pulse-dot"></div>
+            <span class="text-blue-800 font-medium">Host hasn't started the meeting yet</span>
+          </div>
+        </div>
+
+        <!-- Meeting Details -->
+        <div id="waitingMeetingDetails" class="text-left bg-gray-50 rounded-lg p-4 mb-6">
+          <!-- Meeting details will be populated dynamically -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+          <button id="checkAgainBtn"
+            class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+            Check Again
+          </button>
+          <button onclick="closeModal('waitingRoomModal')"
+            class="w-full bg-gray-200 text-gray-800 py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add this modal at the bottom of your template -->
+  <div id="meetingModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+
+      <!-- Modal container -->
+      <div
+        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <!-- Editable Title -->
+          <div class="mb-4">
+            <h3 id="meetingTitleDisplay" class="text-xl font-bold text-[#111418]"></h3>
+            <input id="meetingTitleEdit" type="text"
+              class="hidden w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1980e6]">
+          </div>
+
+          <!-- Meeting Link with Copy Button -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-[#637588] mb-1">Meeting Link</label>
+            <div class="flex">
+              <input id="meetingLinkView" type="text" readonly
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none bg-gray-100 text-[#111418]">
+              <button id="copyLinkBtn"
+                class="px-4 py-2 bg-[#1980e6] text-white rounded-r-md hover:bg-[#1468b5] transition-colors">
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Date and Time (editable) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-[#637588] mb-1">Date</label>
+              <div id="meetingDateDisplay" class="py-2 text-[#111418]"></div>
+              <input id="meetingDateEdit" type="date"
+                class="hidden w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1980e6]">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#637588] mb-1">Time</label>
+              <div id="meetingTimeDisplay" class="py-2 text-[#111418]"></div>
+              <input id="meetingTimeEdit" type="time"
+                class="hidden w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1980e6]">
+            </div>
+          </div>
+
+          <!-- Description (editable) -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-[#637588] mb-1">Description</label>
+            <div id="meetingDescriptionDisplay" class="py-2 text-[#111418] whitespace-pre-line"></div>
+            <textarea id="meetingDescriptionEdit" rows="3"
+              class="hidden w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1980e6]"></textarea>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <div class="flex space-x-2">
+            <!-- Start Meeting Button -->
+            <button id="startMeetingBtn" type="button"
+              class="inline-flex justify-center px-4 py-2 bg-[#1980e6] text-white rounded-md hover:bg-[#1468b5] transition-colors">
+              Start Meeting
+            </button>
+
+            <!-- Edit/Save Button -->
+            <button id="editSaveBtn" type="button"
+              class="inline-flex justify-center px-4 py-2 border border-[#1980e6] text-[#1980e6] rounded-md hover:bg-[#f0f2f4] transition-colors">
+              Edit
+            </button>
+
+            <!-- Delete Button -->
+            <button id="deleteMeetingBtn" type="button"
+              class="inline-flex justify-center px-4 py-2 text-red-600 hover:text-red-800">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z">
+                </path>
+              </svg>
+            </button>
+
+            <!-- Cancel Button -->
+            <button id="cancelModalBtn" type="button"
+              class="inline-flex justify-center px-4 py-2 border border-gray-300 text-[#111418] rounded-md hover:bg-gray-50 transition-colors">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('meetingModal');
+      const meetingLinks = document.querySelectorAll('.meeting-link');
+      const cancelBtn = document.getElementById('cancelModalBtn');
+      const copyLinkBtn = document.getElementById('copyLinkBtn');
+      const editSaveBtn = document.getElementById('editSaveBtn');
+      const deleteBtn = document.getElementById('deleteMeetingBtn');
+      const startMeetingBtn = document.getElementById('startMeetingBtn');
+
+      // Meeting info fields
+      const titleDisplay = document.getElementById('meetingTitleDisplay');
+      const titleEdit = document.getElementById('meetingTitleEdit');
+      const linkInput = document.getElementById('meetingLinkView');
+      const dateDisplay = document.getElementById('meetingDateDisplay');
+      const dateEdit = document.getElementById('meetingDateEdit');
+      const timeDisplay = document.getElementById('meetingTimeDisplay');
+      const timeEdit = document.getElementById('meetingTimeEdit');
+      const descDisplay = document.getElementById('meetingDescriptionDisplay');
+      const descEdit = document.getElementById('meetingDescriptionEdit');
+
+      let currentMeetingId = null;
+      let isEditing = false;
+
+      // Open modal
+      meetingLinks.forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          currentMeetingId = link.getAttribute('data-meeting-id');
+          fetchMeetingData(currentMeetingId);
+          modal.classList.remove('hidden');
+          document.body.classList.add('overflow-hidden');
+        });
+      });
+
+      // Close modal
+      cancelBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        if (isEditing) toggleEditMode();
+      });
+
+      // Copy meeting link
+      copyLinkBtn.addEventListener('click', () => {
+        linkInput.select();
+        document.execCommand('copy');
+        const originalText = copyLinkBtn.textContent;
+        copyLinkBtn.textContent = 'Copied!';
+        copyLinkBtn.classList.add('bg-green-600');
+        setTimeout(() => {
+          copyLinkBtn.textContent = originalText;
+          copyLinkBtn.classList.remove('bg-green-600');
+        }, 2000);
+      });
+
+      // Toggle edit mode and save
+      editSaveBtn.addEventListener('click', () => {
+        if (isEditing) saveMeetingChanges(currentMeetingId);
+        toggleEditMode();
+      });
+
+      // Delete meeting
+      deleteBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete this meeting?')) {
+          deleteMeeting(currentMeetingId);
+        }
+      });
+
+      // Start meeting
+      startMeetingBtn.addEventListener('click', () => {
+        window.location.href = linkInput.value;
+      });
+
+      function toggleEditMode() {
+        isEditing = !isEditing;
+        titleDisplay.classList.toggle('hidden');
+        titleEdit.classList.toggle('hidden');
+        dateDisplay.classList.toggle('hidden');
+        dateEdit.classList.toggle('hidden');
+        timeDisplay.classList.toggle('hidden');
+        timeEdit.classList.toggle('hidden');
+        descDisplay.classList.toggle('hidden');
+        descEdit.classList.toggle('hidden');
+
+        if (isEditing) {
+          titleEdit.value = titleDisplay.textContent;
+          dateEdit.value = dateDisplay.dataset.rawDate;
+          timeEdit.value = timeDisplay.dataset.rawTime;
+          descEdit.value = descDisplay.textContent;
+          editSaveBtn.textContent = 'Save';
+          editSaveBtn.classList.replace('text-[#1980e6]', 'text-white');
+          editSaveBtn.classList.replace('border-[#1980e6]', 'bg-green-600');
+        } else {
+          editSaveBtn.textContent = 'Edit';
+          editSaveBtn.classList.replace('text-white', 'text-[#1980e6]');
+          editSaveBtn.classList.replace('bg-green-600', 'border-[#1980e6]');
+        }
+      }
+
+      function fetchMeetingData(meetingId) {
+        fetch(`/meetings/detail/${meetingId}/`)
+          .then(response => response.json())
+          .then(data => {
+            titleDisplay.textContent = data.title;
+            // Generate and set the meeting link
+            const baseUrl = window.location.origin;
+            linkInput.value = `${baseUrl}/meetings/join/${data.link}/`;
+
+            const meetingDate = new Date(`${data.date}T${data.time}`);
+            dateDisplay.textContent = meetingDate.toLocaleDateString();
+            dateDisplay.dataset.rawDate = data.date;
+
+            timeDisplay.textContent = meetingDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            timeDisplay.dataset.rawTime = data.time;
+
+            descDisplay.textContent = data.description;
+
+            // Disable edit button if user is not the creator
+            if (!data.is_creator) {
+              editSaveBtn.disabled = true;
+              editSaveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+              editSaveBtn.title = 'Only the meeting creator can edit this meeting';
+              startMeetingBtn.textContent = 'Join Meeting';
+            } else {
+              editSaveBtn.disabled = false;
+              editSaveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+              editSaveBtn.title = '';
+              startMeetingBtn.textContent = 'Start Meeting';
+            }
+          })
+          .catch(err => {
+            console.error('Fetch error:', err);
+            alert('Failed to load meeting details');
+          });
+      }
+
+      function saveMeetingChanges(meetingId) {
+        const updatedData = {
+          title: titleEdit.value,
+          scheduled_date: dateEdit.value,
+          meeting_time: timeEdit.value,
+          description: descEdit.value
+        };
+
+        fetch(`/meetings/update/${meetingId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(updatedData)
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              // Update UI immediately
+              titleDisplay.textContent = updatedData.title;
+              const updatedDate = new Date(`${updatedData.scheduled_date}T${updatedData.meeting_time}`);
+              dateDisplay.textContent = updatedDate.toLocaleDateString();
+              dateDisplay.dataset.rawDate = updatedData.scheduled_date;
+              timeDisplay.textContent = updatedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              timeDisplay.dataset.rawTime = updatedData.meeting_time;
+              descDisplay.textContent = updatedData.description;
+
+              // Update card in the list (optional, if shown in card)
+              const meetingCard = document.querySelector(`.meeting-link[data-meeting-id="${meetingId}"]`);
+              if (meetingCard) {
+                const updatedDate = new Date(`${updatedData.scheduled_date}T${updatedData.meeting_time}`);
+
+                const titleElement = meetingCard.querySelector('.meeting-title');
+                if (titleElement) titleElement.textContent = updatedData.title;
+
+                const dateElement = meetingCard.querySelector('.meeting-date');
+                if (dateElement) dateElement.textContent = updatedDate.toLocaleDateString();
+
+                const timeElement = meetingCard.querySelector('.meeting-time');
+                if (timeElement) timeElement.textContent = updatedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              }
+
+
+              alert('Meeting updated successfully!');
+            } else {
+              throw new Error(data.error || 'Update failed');
+            }
+          })
+          .catch(err => {
+            console.error('Update error:', err);
+            alert('Error updating meeting: ' + (err.message || 'Unknown'));
+          });
+      }
+
+      function deleteMeeting(meetingId) {
+        fetch(`/meetings/delete/${meetingId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              modal.classList.add('hidden');
+              document.body.classList.remove('overflow-hidden');
+              const meetingElement = document.querySelector(`.meeting-link[data-meeting-id="${meetingId}"]`);
+              if (meetingElement) meetingElement.remove();
+              alert('Meeting deleted successfully!');
+            } else {
+              throw new Error(data.error || 'Delete failed');
+            }
+          })
+          .catch(err => {
+            console.error('Delete error:', err);
+            alert('Error deleting meeting: ' + (err.message || 'Unknown'));
+          });
+      }
+
+      function getCookie(name) {
+        const cookieArr = document.cookie.split(';');
+        for (const cookie of cookieArr) {
+          const [key, value] = cookie.trim().split('=');
+          if (key === name) return decodeURIComponent(value);
+        }
+        return null;
+      }
+    });
+  </script>
+
+
+  <script>
+    const drawerToggle = document.getElementById('drawerToggle');
+    const drawer = document.getElementById('drawer');
+    const mainContent = document.getElementById('mainContent');
+
+
+        drawerToggle.addEventListener('click', () => {
+      if (window.innerWidth <= 640) {
+        drawer.classList.toggle('show');
+      } else {
+        drawer.classList.toggle('-translate-x-full');
+        if (drawer.classList.contains('-translate-x-full')) {
+
+          mainContent.classList.remove('sm:ml-80');
+          mainContent.classList.add('ml-0');
+        } else {
+          mainContent.classList.remove('ml-0');
+          mainContent.classList.add('sm:ml-80');
+        }
+      }
+    });
+    // New modal functions
+    let selectedMeetingType = null;
+
+    function openJoinMeetingModal() {
+      document.getElementById('joinMeetingModal').style.display = 'flex';
+    }
+
+    function openNewMeetingModal() {
+      document.getElementById('newMeetingModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+      if (modalId === 'newMeetingModal') {
+        selectedMeetingType = null;
+        const options = document.querySelectorAll('.option-card');
+        options.forEach(option => option.classList.remove('selected'));
+        document.getElementById('newMeetingNextBtn').disabled = true;
+      } else if (modalId === 'waitingRoomModal') {
+        // Clean up waiting room interval
+        if (window.waitingRoomCheckInterval) {
+          clearInterval(window.waitingRoomCheckInterval);
+          window.waitingRoomCheckInterval = null;
+        }
+      }
+    }
+
+    function selectOption(element, type) {
+      const options = document.querySelectorAll('.option-card');
+      options.forEach(option => option.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedMeetingType = type;
+      document.getElementById('newMeetingNextBtn').disabled = false;
+    }
+
+    function proceedToSchedule() {
+      if (selectedMeetingType === 'instant') {
+        // Start instant meeting
+        closeModal('newMeetingModal');
+        alert('Starting instant meeting...');
+        // Here you would actually start the meeting
+        window.location.href = '/meetings/instant';
+      } else if (selectedMeetingType === 'scheduled') {
+        // Show schedule meeting form
+        closeModal('newMeetingModal');
+        document.getElementById('scheduleMeetingModal').style.display = 'flex';
+
+        // Set default values
+        const today = new Date();
+        const dateStr = today.toISOString().split('T')[0];
+        document.getElementById('meetingDate').value = dateStr;
+
+        // Set time to next hour
+        const nextHour = today.getHours() + 1;
+        document.getElementById('meetingStartTime').value = `${nextHour.toString().padStart(2, '0')}:00`;
+      }
+    }
+
+    function backToMeetingType() {
+      closeModal('scheduleMeetingModal');
+      openNewMeetingModal();
+    }
+
+    function joinMeeting() {
+      const meetingInput = document.getElementById('meetingLink');
+      let link = meetingInput.value.trim();
+      if (!link) {
+        alert('Please enter a meeting link or ID');
+        return;
+      }
+      closeModal('joinMeetingModal');
+
+      // Support full link or just ID
+      let meetingId = link;
+
+      window.location.href = `/meetings/join/${meetingId}`;
+    }
+
+    function openWaitingRoomModal(meetingData) {
+      const modal = document.getElementById('waitingRoomModal');
+      const title = document.getElementById('waitingMeetingTitle');
+      const details = document.getElementById('waitingMeetingDetails');
+
+      // Set meeting title
+      title.textContent = meetingData.title;
+
+      // Set meeting details
+      const meetingDate = new Date(`${meetingData.date}T${meetingData.time}`);
+      details.innerHTML = `
+          <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex justify-between">
+              <span>Date:</span>
+              <span class="font-medium">${meetingDate.toLocaleDateString()}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Time:</span>
+              <span class="font-medium">${meetingDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+            ${meetingData.description ? `
+            <div class="flex justify-between">
+              <span>Description:</span>
+              <span class="font-medium">${meetingData.description.substring(0, 30)}${meetingData.description.length > 30 ? '...' : ''}</span>
+            </div>
+            ` : ''}
+          </div>
+        `;
+
+      // Store current meeting ID for status checking
+      window.currentWaitingMeetingId = meetingData.link;
+
+      // Show modal
+      modal.style.display = 'flex';
+
+      // Start checking meeting status
+      startMeetingStatusCheck(meetingData.link);
+    }
+
+    function startMeetingStatusCheck(meetingId) {
+      const checkInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`/meetings/check_status/${meetingId}/`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.is_started) {
+              // Meeting has started, close modal and redirect
+              clearInterval(checkInterval);
+              closeModal('waitingRoomModal');
+              window.location.href = `/meetings/join/${meetingId}/`;
+            }
+          }
+        } catch (error) {
+          console.error('Error checking meeting status:', error);
+        }
+      }, 3000);
+
+      // Store interval ID for cleanup
+      window.waitingRoomCheckInterval = checkInterval;
+    }
+
+    function scheduleMeeting() {
+      const title = document.getElementById('meetingTitle').value.trim();
+      const date = document.getElementById('meetingDate').value;
+      const time = document.getElementById('meetingStartTime').value;
+      const duration = document.getElementById('meetingDuration').value;
+      const description = document.getElementById('meetingDescription').value;
+
+      if (!title) {
+        alert('Please enter a meeting title');
+        return;
+      }
+
+      if (!date || !time) {
+        alert('Please select date and time');
+        return;
+      }
+
+      const meetingData = {
+        title,
+        date,
+        time,
+        duration,
+        description
+      };
+
+      closeModal('scheduleMeetingModal');
+      console.log('Scheduling meeting:', meetingData);
+      alert('Meeting scheduled successfully!');
+      // Here you would actually schedule the meeting by sending data to server
+    }
+
+    // Update the existing buttons to open modals
+    document.addEventListener('DOMContentLoaded', function () {
+      // Find all "Join Meeting" buttons and add click handlers
+      document.querySelectorAll('a[href="/join-meeting"]').forEach(button => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          openJoinMeetingModal();
+        });
+      });
+
+      // Find all "New Meeting" buttons and add click handlers
+      document.querySelectorAll('a[href="/new-meeting"]').forEach(button => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          openNewMeetingModal();
+        });
+      });
+
+      // Add event listener for check again button
+      const checkAgainBtn = document.getElementById('checkAgainBtn');
+      if (checkAgainBtn) {
+        checkAgainBtn.addEventListener('click', async () => {
+          const meetingId = window.currentWaitingMeetingId;
+          if (meetingId) {
+            try {
+              const response = await fetch(`/meetings/check_status/${meetingId}/`);
+              if (response.ok) {
+                const data = await response.json();
+                if (data.is_started) {
+                  closeModal('waitingRoomModal');
+                  window.location.href = `/meetings/join/${meetingId}/`;
+                }
+              }
+            } catch (error) {
+              console.error('Error checking meeting status:', error);
+            }
+          }
+        });
+      }
+    });
+  </script>
+  <script>
+    // Profile dropdown toggle
+    const profileButton = document.getElementById('profileDropdownButton');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    profileButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!profileDropdown.contains(e.target)) {
+        profileDropdown.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+
+</html>

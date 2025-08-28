@@ -1,0 +1,430 @@
+{% load static %}
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>SAWA</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    
+    <style>
+       a {
+        transition: color 0.3s ease;
+      }
+      button,
+    .eff {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }.eff:hover,
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .notification-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      margin-top: 0.5rem;
+      width: 16rem;
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      z-index: 50;
+    }
+
+    .notification-dropdown.show {
+      display: block;
+    }
+
+    .notification-item {
+      padding: 4px 16px;
+      border-bottom: 1px solid #e8eef3;
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-empty {
+      padding: 16px;
+      text-align: center;
+      color: #637588;
+    }
+
+    .notification-icon {
+      color: #111418;
+    }
+
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-[#f8fafb] group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e8eef3] px-10 py-3">
+          <a href="/" class="hover:text-[#1f93e0] transition-colors eff">
+            <div>
+              <img src="{% static 'assets/img/complete_logo.png' %}" alt="Logo" style="height: 60px;" />
+            </div>
+          </a>
+          
+          <div class="flex flex-1 justify-end gap-8">
+            <!-- <div class="flex items-center gap-9">
+              <a class="text-[#0e151b] text-sm font-medium leading-normal inline-block  bg-[#e8eef3] rounded-full px-4 py-2" href="#main page.html">Dashboard</a>
+            </div> -->
+            <!-- <div class="flex gap-2">
+              <button
+                class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e151b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+              >
+                <div class="text-[#0e151b]" data-icon="Bell" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path
+                      d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
+              <button
+                class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e151b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+              >
+                <div class="text-[#0e151b]" data-icon="Question" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path
+                      d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+            <div
+              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+              style='background-image: url("https://cdn.usegalileo.ai/sdxl10/a245309c-1e3c-4d2e-ab37-e62e455b4346.png");'
+            ></div> -->
+          <!-- </div> -->
+
+
+          <!-- Notification Button with Dropdown -->
+       
+        </div>
+         <div class="relative">
+          <button id="notificationButton"
+            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+            title="Notifications" style="margin: 16px;">
+            <div class="notification-icon" data-icon="Bell" data-size="20px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+                viewBox="0 0 256 256">
+                <path
+                  d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z">
+                </path>
+              </svg>
+            </div>
+          </button>
+          
+
+          <!-- Notification Dropdown -->
+          <div id="notificationDropdown"
+            class="notification-dropdown mt-2 w-64 bg-white rounded-xl shadow-lg py-1 z-50 border border-[#e8eef3]">
+            <div class="notification-empty">
+              No current notifications
+            </div>
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const notificationButton = document.getElementById('notificationButton');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+
+            // Hide dropdown initially
+            notificationDropdown.classList.remove('show');
+
+            notificationButton.addEventListener('click', (e) => {
+              e.stopPropagation();
+              notificationDropdown.classList.toggle('show');
+            });
+
+            // Close dropdown on outside click
+            document.addEventListener('click', (e) => {
+              if (
+                notificationDropdown &&
+                !notificationDropdown.contains(e.target) &&
+                !notificationButton.contains(e.target)
+              ) {
+                notificationDropdown.classList.remove('show');
+              }
+            });
+          });
+        </script>
+
+
+
+        <!-- Profile Dropdown - Replace the existing profile image div -->
+        <div class="relative">
+          <button id="profileDropdownButton" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+            style='background-image: url("{% if user.profile_picture %}{{ user.profile_picture.url }}{%elif user.gender == "M" %}{% static "assets/img/male-avatar.png" %}{% else %}{% static "assets/img/female-avatar.png" %}{% endif %}");'
+            </button>
+              
+            <!-- Dropdown menu -->
+            <div id="profileDropdown"
+              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-50 border border-[#e8eef3]">
+              <div class="px-4 py-2 border-b border-[#e8eef3]">
+                <p class="text-sm font-medium text-[#111418] truncate max-w-[200px]">{{ user.first_name }} {{ user.last_name }}</p>
+                <p class="text-xs text-[#637588] truncate max-w-[200px]">{{ user.email }}</p>
+              </div>
+              <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-[#111418] hover:bg-[#f0f2f4]">Profile</a>
+              <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm logout-btn hover:bg-[#fff0f0]">
+                Logout
+              </a>
+            </div>
+             <script>
+    // Profile dropdown toggle
+    const profileButton = document.getElementById('profileDropdownButton');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    profileButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!profileDropdown.contains(e.target)) {
+        profileDropdown.classList.add('hidden');
+      }
+    });
+  </script>
+        </header>
+        <div class="gap-1 px-6 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col w-80">
+            <div class="flex h-full min-h-[700px] flex-col justify-between bg-[#f8fafb] p-4">
+              <div class="flex flex-col gap-4">
+                <div class="flex gap-3">
+                  <div
+                    class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                    style='background-image: url("{% if user.profile_picture %}{{ user.profile_picture.url }}{%elif user.gender == "M" %}{% static "assets/img/male-avatar.png" %}{% else %}{% static "assets/img/female-avatar.png" %}{% endif %}");';
+                  ></div>
+                  <div class="flex flex-col">
+                    <h1 class="text-[#0e151b] text-base font-medium leading-normal">Admin</h1>
+                    <p class="text-[#507695] text-sm font-normal leading-normal">Dashboard</p>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-3 px-3 py-2 ">
+                    <div class="text-[#0e151b]" data-icon="User" data-size="24px" data-weight="fill">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <a href="{%url 'user_management' %}">
+                      <p class="text-[#0e151b] text-sm font-medium leading-normal cursor-pointer">
+                        User Management
+                    </p>
+                  </a>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#0e151b]" data-icon="Presentation" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176Z"
+                        ></path>
+                      </svg>
+                    </div>
+                  <a href="{%url 'meeting_oversights' %}">
+                      <p class="text-[#0e151b] text-sm font-medium leading-normal cursor-pointer">
+                        Meeting Oversights
+                    </p>
+                  </a>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#0e151b]" data-icon="Translate" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M239.15,212.42l-56-112a8,8,0,0,0-14.31,0l-21.71,43.43A88,88,0,0,1,100,126.93,103.65,103.65,0,0,0,127.69,64H152a8,8,0,0,0,0-16H96V32a8,8,0,0,0-16,0V48H24a8,8,0,0,0,0,16h87.63A87.76,87.76,0,0,1,88,116.35a87.74,87.74,0,0,1-19-31,8,8,0,1,0-15.08,5.34A103.63,103.63,0,0,0,76,127a87.55,87.55,0,0,1-52,17,8,8,0,0,0,0,16,103.46,103.46,0,0,0,64-22.08,104.18,104.18,0,0,0,51.44,21.31l-26.6,53.19a8,8,0,0,0,14.31,7.16L140.94,192h70.11l13.79,27.58A8,8,0,0,0,232,224a8,8,0,0,0,7.15-11.58ZM148.94,176,176,121.89,203.05,176Z"
+                        ></path>
+                      </svg>
+                    </div>
+                  <a href="{%url 'translation_usage' %}">
+                      <p class="text-[#0e151b] text-sm font-medium leading-normal cursor-pointer">
+                       Translation &amp; Usage
+                    </p>
+                  </a>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2 inline-block  bg-[#e8eef3] rounded-full px-4 py-2">
+                    <div class="text-[#0e151b]" data-icon="Gear" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"
+                        ></path>
+                      </svg>
+                    </div>
+                   <a href="{%url 'platform_settings' %}">
+                      <p class="text-[#0e151b] text-sm font-medium leading-normal cursor-pointer">
+                        Platform Settings
+                    </p>
+                  </a>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#0e151b]" data-icon="Question" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"
+                        ></path>
+                      </svg>
+                    </div>
+                   <a href="{%url 'support_feedback' %}">
+                      <p class="text-[#0e151b] text-sm font-medium leading-normal cursor-pointer">
+                        Support &amp; Feedback
+                    </p></a>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#0e151b]" data-icon="Scales" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M239.43,133l-32-80h0a8,8,0,0,0-9.16-4.84L136,62V40a8,8,0,0,0-16,0V65.58L54.26,80.19A8,8,0,0,0,48.57,85h0v.06L16.57,165a7.92,7.92,0,0,0-.57,3c0,23.31,24.54,32,40,32s40-8.69,40-32a7.92,7.92,0,0,0-.57-3L66.92,93.77,120,82V208H104a8,8,0,0,0,0,16h48a8,8,0,0,0,0-16H136V78.42L187,67.1,160.57,133a7.92,7.92,0,0,0-.57,3c0,23.31,24.54,32,40,32s40-8.69,40-32A7.92,7.92,0,0,0,239.43,133ZM56,184c-7.53,0-22.76-3.61-23.93-14.64L56,109.54l23.93,59.82C78.76,180.39,63.53,184,56,184Zm144-32c-7.53,0-22.76-3.61-23.93-14.64L200,77.54l23.93,59.82C222.76,148.39,207.53,152,200,152Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <a href="{%url 'system_logs' %}">
+                      <p class="text-[#0e151b] text-sm font-medium leading-normal cursor-pointer">
+                        System Logs &amp; Audit Trail
+                    </p></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="flex flex-wrap justify-between gap-3 p-4"><p class="text-[#0e151b] tracking-light text-[32px] font-bold leading-tight min-w-72">Platform Settings</p></div>
+            <div class="flex items-center gap-3 w-full mx-auto mb-4">
+              <div class="relative w-full">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#507695" viewBox="0 0 256 256">
+                    <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                  </svg>
+                </div>
+                <input type="search" class="w-full pl-10 pr-4 py-2 bg-white border border-[#d1dce6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#507695]" placeholder="Search users...">
+              </div>
+              <button class="bg-[#507695] text-white rounded-xl px-4 py-2 text-sm font-medium">Search</button>
+            </div>
+
+            <div class="overflow-hidden rounded-xl border border-[#d1dce6] bg-white">
+              <table class="w-full text-left">
+                <thead class="bg-[#f8fafb] text-[#507695]">
+                  <tr>
+                    <th class="px-4 py-5 text-sm font-medium">Name</th>
+                    <th class="px-4 py-5 text-sm font-medium">Email</th>
+                    <th class="px-4 py-5 text-sm font-medium">Role</th>
+                    <th class="px-4 py-5 text-sm font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[#e8eef3]">
+                  <tr class="hover:bg-[#f8fafb]">
+                    <td class="px-4 py-5 text-sm font-medium text-[#0e151b]">Alexa Pena</td>
+                    <td class="px-4 py-5 text-sm text-[#507695]">alexa.pena@example.com</td>
+                    <td class="px-4 py-5">
+                      <span class="rounded-full bg-[#e8eef3] px-3 py-1 text-xs font-medium text-[#0e151b]">Member</span>
+                    </td>
+                    <td class="px-4 py-5">
+                      <button class="text-sm font-medium text-blue-600 hover:text-blue-800">Change Role</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-[#f8fafb]">
+                    <td class="px-4 py-5 text-sm font-medium text-[#0e151b]">Alexa Pena</td>
+                    <td class="px-4 py-5 text-sm text-[#507695]">alexa.pena@example.com</td>
+                    <td class="px-4 py-5">
+                      <span class="rounded-full bg-[#e8eef3] px-3 py-1 text-xs font-medium text-[#0e151b]">Member</span>
+                    </td>
+                    <td class="px-4 py-5">
+                      <button class="text-sm font-medium text-blue-600 hover:text-blue-800">Revoke Role</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-[#f8fafb]">
+                    <td class="px-4 py-5 text-sm font-medium text-[#0e151b]">Alexa Pena</td>
+                    <td class="px-4 py-5 text-sm text-[#507695]">alexa.pena@example.com</td>
+                    <td class="px-4 py-5">
+                      <span class="rounded-full bg-[#e8eef3] px-3 py-1 text-xs font-medium text-[#0e151b]">Member</span>
+                    </td>
+                    <td class="px-4 py-5">
+                      <button class="text-sm font-medium text-blue-600 hover:text-blue-800">Add Role</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="overflow-hidden rounded-xl border border-[#d1dce6] bg-white mt-6">
+              <table class="w-full text-left">
+                  <thead class="bg-[#f8fafb] text-[#507695]">
+                      <tr>
+                          <th class="px-4 py-5 text-sm font-medium">Notification Type</th>
+                          <th class="px-4 py-5 text-sm font-medium">Status</th>
+                          <th class="px-4 py-5 text-sm font-medium">Role</th>
+                          <th class="px-4 py-5 text-sm font-medium">Email</th>
+                      </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#e8eef3]">
+                      <tr class="hover:bg-[#f8fafb]">
+                          <td class="px-4 py-5 text-sm font-medium text-[#0e151b]">New Meeting Invitation</td>
+                          <td class="px-4 py-5 text-sm font-medium text-green-600">✔ ON</td>
+                          <td class="px-4 py-5 text-sm font-medium text-green-600">✔ ON</td>
+                          <td class="px-4 py-5 text-sm font-medium text-red-600">✖ OFF</td>
+                      </tr>
+                      <tr class="hover:bg-[#f8fafb]">
+                          <td class="px-4 py-5 text-sm font-medium text-[#0e151b]">Meeting Reminder</td>
+                          <td class="px-4 py-5 text-sm font-medium text-red-600">✖ OFF</td>
+                          <td class="px-4 py-5 text-sm font-medium text-red-600">✖ OFF</td>
+                          <td class="px-4 py-5 text-sm font-medium text-green-600">✔ ON</td>
+                      </tr>
+                      <tr class="hover:bg-[#f8fafb]">
+                          <td class="px-4 py-5 text-sm font-medium text-[#0e151b]">Translation Completed</td>
+                          <td class="px-4 py-5 text-sm font-medium text-green-600">✔ ON</td>
+                          <td class="px-4 py-5 text-sm font-medium text-red-600">✖ OFF</td>
+                          <td class="px-4 py-5 text-sm font-medium text-red-600">✖ OFF</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="flex flex-col items-center p-8 text-sm relative">
+        <div class="flex flex-wrap justify-center gap-8 mb-4">
+          <a href="#" class="text-gray-600 hover:text-gray-900">About Us</a>
+          <a href="#" class="text-gray-600 hover:text-gray-900">Contact Us</a>
+          <a href="#" class="text-gray-600 hover:text-gray-900">Privacy Policy</a>
+          <a href="#" class="text-gray-600 hover:text-gray-900">Terms of Service</a>
+        </div>
+        
+        <div class="flex gap-6 mb-4">
+          <a href="#" class="text-gray-500 hover:text-gray-700">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8.666 12.001H15.333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8.667V15.334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-gray-700">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 4.01C21.375 4.339 20.703 4.574 20 4.707C20.719 4.271 21.273 3.573 21.537 2.749C20.865 3.154 20.119 3.447 19.333 3.6C18.703 2.908 17.798 2.5 16.8 2.5C14.884 2.5 13.334 4.05 13.334 5.967C13.334 6.279 13.368 6.582 13.436 6.871C10.554 6.703 8.001 5.323 6.269 3.238C5.926 3.83 5.733 4.517 5.733 5.251C5.733 6.644 6.447 7.872 7.54 8.582C6.973 8.561 6.435 8.404 5.962 8.143V8.192C5.962 9.863 7.158 11.272 8.758 11.641C8.423 11.735 8.069 11.783 7.704 11.783C7.436 11.783 7.177 11.759 6.925 11.71C7.451 13.095 8.747 14.095 10.277 14.127C9.079 15.047 7.582 15.594 5.958 15.594C5.636 15.594 5.319 15.575 5.007 15.537C6.556 16.521 8.38 17.089 10.34 17.089C16.79 17.089 20.289 11.851 20.289 7.292L20.275 6.766C20.954 6.276 21.543 5.649 22 4.935V4.01Z" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-gray-700">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <p class="text-gray-500">© 2025 Sawa App. All rights reserved.</p>
+      </footer>
+  </body>
+</html>

@@ -1,0 +1,828 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get help with Sawa - your virtual meeting platform with real-time translation">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+    <title>SAWA - Help & Support</title>
+    <link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1980e6',
+                        secondary: '#0e161b',
+                        accent: '#1f93e0',
+                        dark: '#111418',
+                        medium: '#637588',
+                        light: '#e8eef3',
+                        border: '#dce0e5',
+                        success: '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+        <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      a {
+        transition: color 0.3s ease;
+      }
+      button, .eff {
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .eff:hover, button:hover {
+        transform: scale(1.05);
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: white;
+        padding: 24px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.3s ease-out;
+      }
+      .profile-picture-upload {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+      }
+      .profile-picture-upload:hover .profile-overlay {
+        opacity: 1;
+      }
+      .profile-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .profile-overlay-icon {
+        color: white;
+        font-size: 24px;
+      }
+      .form-input {
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .form-input:focus {
+        border-color: #1980e6;
+        box-shadow: 0 0 0 3px rgba(25, 128, 230, 0.1);
+      }
+      .btn-primary {
+        background-color: #1980e6;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #1470cc;
+      }
+      .btn-secondary {
+        background-color: #e8eef3;
+        transition: background-color 0.3s ease;
+      }
+      .btn-secondary:hover {
+        background-color: #d0dbe7;
+      }
+      .language-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1em;
+      }
+          html {
+        scroll-behavior: smooth;
+      }
+      a {
+        transition: color 0.3s ease;
+      }
+      button, .eff {
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .eff:hover, button:hover {
+        transform: scale(1.05);
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: white;
+        padding: 24px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.3s ease-out;
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111418;
+      }
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #637588;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #111418;
+        font-weight: 500;
+      }
+      .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #e8eef3;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: #1980e6;
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .option-card {
+        border: 1px solid #e8eef3;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .option-card:hover {
+        border-color: #1980e6;
+        background-color: #f8fafc;
+      }
+      .option-card.selected {
+        border-color: #1980e6;
+        background-color: #f0f7ff;
+      }
+      .option-title {
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .option-description {
+        font-size: 14px;
+        color: #637588;
+      }
+      .slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.profile-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 12rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 50;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.profile-dropdown.show {
+  display: block;
+}
+
+/* Styling for the logout button */
+.logout-btn {
+  color: #ff5a5f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.logout-widget-icon {
+  width: 20px;
+  height: 20px;
+}
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 16rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 50;
+}
+
+.notification-dropdown.show {
+  display: block;
+}
+
+.notification-item {
+  padding: 4px 16px;
+  border-bottom: 1px solid #e8eef3;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-empty {
+  padding: 16px;
+  text-align: center;
+  color: #637588;
+}
+
+.notification-icon {
+  color: #111418;
+}
+        .accordion-item {
+            transition: all 0.3s ease;
+            border-radius: 0.75rem;
+            border: 1px solid #dce0e5;
+            background: white;
+        }
+        
+        .accordion-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-item[open] .accordion-content {
+            max-height: 500px;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-item[open] .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        @media (max-width: 768px) {
+            .header-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+    <!-- Header -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e8eef3] px-10 py-3 bg-white fixed top-0 left-0 w-full z-50">
+      <div class="flex items-center gap-4 text-[#0e161b]">
+            <a href="/" class="block sm:hidden hover:text-[#1f93e0] transition-colors eff">
+      <img src="{% static 'assets/img/logo.png' %}" alt="Logo" style="height: 80px;" />
+    </a>
+
+    <a href="/" class="hidden sm:block hover:text-[#1f93e0] transition-colors eff">
+                    <img src="{% static 'assets/img/complete_logo.png' %}" alt="Logo" style="height: 60px;" />
+    </a>
+      </div>
+      <div class="flex flex-1 justify-end gap-8">
+        <div class="flex gap-2">
+         <!-- Help Button -->
+    <a href="{%url 'help' %}" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5" title="Help">
+      <div class="text-[#0e161b]" data-icon="Question" data-size="20px" data-weight="regular">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+          <path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path>
+        </svg>
+      </div>
+    </a>
+
+    <!-- Settings Button -->
+    <a href="{% url 'settings' %}" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5" title="Settings">
+      <div class="text-[#0e161b]" data-icon="Gear" data-size="20px" data-weight="regular">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+          <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path>
+        </svg>
+      </div>
+    </a>
+
+    
+
+
+            <!-- Notification Button with Dropdown -->
+            <div class="relative">
+              <button id="notificationButton" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5" title="Notifications">
+                <div class="notification-icon" data-icon="Bell" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
+                  </svg>
+                </div>
+              </button>
+
+              <!-- Notification Dropdown -->
+              <div id="notificationDropdown" class="notification-dropdown mt-2 w-64 bg-white rounded-xl shadow-lg py-1 z-50 border border-[#e8eef3]">
+                <div class="notification-empty">
+                  No current notifications
+                </div>
+              </div>
+            </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                const notificationButton = document.getElementById('notificationButton');
+                const notificationDropdown = document.getElementById('notificationDropdown');
+
+                // Hide dropdown initially
+                notificationDropdown.classList.remove('show');
+
+                notificationButton.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  notificationDropdown.classList.toggle('show');
+                });
+
+                // Close dropdown on outside click
+                document.addEventListener('click', (e) => {
+                  if (
+                    notificationDropdown &&
+                    !notificationDropdown.contains(e.target) &&
+                    !notificationButton.contains(e.target)
+                  ) {
+                    notificationDropdown.classList.remove('show');
+                  }
+                });
+              });
+            </script>
+
+
+        
+        <!-- Profile Dropdown - Replace the existing profile image div -->
+        <div class="relative">
+          <button id="profileDropdownButton" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                    style='background-image: url("{% if user.profile_picture %}{{ user.profile_picture.url }}{%elif user.gender == "M" %}{% static "assets/img/male-avatar.png" %}{% else %}{% static "assets/img/female-avatar.png" %}{% endif %}");'
+          </button>
+          
+          <!-- Dropdown menu -->
+          <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-50 border border-[#e8eef3]">
+            <div class="px-4 py-2 border-b border-[#e8eef3]">
+              <p class="text-sm font-medium text-[#111418] truncate max-w-[200px]">{{ user.first_name }} {{ user.last_name }}</p>
+              <p class="text-xs text-[#637588] truncate max-w-[200px]">{{ user.email }}</p>
+            </div>
+            <a href="/profile" class="block px-4 py-2 text-sm text-[#111418] hover:bg-[#f0f2f4]">Profile</a>
+            <a href="/logout" class="block px-4 py-2 text-sm logout-btn hover:bg-[#fff0f0]">
+              Logout
+            </a>
+          </div>
+        </div>
+      </div>
+      <script>
+    // Profile dropdown toggle
+    const profileButton = document.getElementById('profileDropdownButton');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    profileButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!profileDropdown.contains(e.target)) {
+        profileDropdown.classList.add('hidden');
+      }
+    });
+  </script>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 sm:px-6 py-8 max-w-4xl pt-24">
+        <div class="text-center pt-24 sm:pt-20 mb-10">
+  <h1 class="text-3xl sm:text-4xl font-bold text-dark mb-4">Get Help with Sawa</h1>
+  <p class="text-medium max-w-2xl mx-auto">
+    Find answers to common questions or contact our support team for personalized assistance
+  </p>
+</div>
+        
+        <!-- FAQ Section -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-dark mb-6">Frequently Asked Questions</h2>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item -->
+                <div class="accordion-item">
+                    <details class="group" open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">What is Sawa?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                SAWA is a virtual meeting platform designed to break language barriers by providing real-time speech translation and dubbing. It enables users from diverse linguistic backgrounds to communicate effortlessly through predefined AI models and built-in libraries for live translations.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- Additional FAQ items (shortened for brevity) -->
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I use Sawa?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                SAWA allows users to host and join meetings, speak in their native language, and receive instant translations in both text and voice formats. It also includes essential video conferencing features such as screen sharing, chat, participant management, and meeting scheduling.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- More FAQ items would follow the same pattern -->
+                 <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I join a Sawa meeting?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                To join a SAWA meeting, simply click on the meeting link provided by the host. You can join as a registered user or as a guest. Once in the meeting, you can select your preferred language for real-time translation and start communicating seamlessly.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+
+
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I schedule a Sawa meeting?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                To schedule a SAWA meeting, log in to your account, click on "Schedule Meeting," and fill in the meeting details such as date, time, and participants. You can also set the preferred languages for translation. Once scheduled, participants will receive an invitation link.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I share my screen?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                During a SAWA meeting, click on the "Share Screen" button to share your screen with other participants. You can choose to share your entire screen or a specific application window. This feature is useful for presentations and collaborative work.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I record a meeting?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                To record a SAWA meeting, click on the "Record" button during the meeting. The recording will be saved to your account, and you can access it later for review or sharing with participants who couldn't attend.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How does Sawa work?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                Sawa is a virtual meeting platform that enables real-time speech translation and dubbing. It allows users from diverse linguistic backgrounds to communicate seamlessly
+                  through AI-powered speech-to-text (STT), machine translation, and text-to-speech (TTS) technologies. Users can host and join meetings, receive instant translations,
+                  and utilize essential video conferencing features like screen sharing, chat, and participant management.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">What is a Sawa meeting ID?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                A Sawa Meeting ID is a unique identifier assigned to each meeting session. It allows participants to join a meeting quickly by entering the ID without needing an
+                  invitation link. This enhances accessibility and makes it easier to host and join meetings seamlessly.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I set up a Sawa account?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                To set up a Sawa account, go to www.sawa.com. Click the 'Sign up, it's free' button. Enter your email address and create a password. Click 'Sign up'. You will
+                  receive a confirmation email. Click the link in the email to confirm your account. Once your account is confirmed, you can start using Sawa to schedule and join
+                  meetings.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">How do I invite others to my Sawa meeting?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                To invite participants to a Sawa meeting, generate a unique meeting link or ID from your dashboard and share it via email, chat, or any preferred communication method. Participants can join instantly without registration.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="accordion-item">
+                    <details class="group"open>
+                        <summary class="flex cursor-pointer items-center justify-between gap-6 p-4 list-none">
+                            <p class="text-dark text-base font-medium">What are the best practices for using Sawa?</p>
+                            <div class="text-dark accordion-icon" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                                </svg>
+                            </div>
+                        </summary>
+                        <div class="accordion-content">
+                            <p class="text-medium px-4 pb-4">
+                                The best practices for using Sawa include: Use a quiet, well-lit space for your meeting. Use a headset with a microphone for better sound quality. Close any
+                  unnecessary apps on your computer to avoid distractions. Mute your microphone when you're not speaking to reduce background noise. Use the 'raise hand' feature to
+                  ask questions or make comments during the meeting. Share your screen to show documents, slides, or other content to other participants. Record the meeting to
+                  review later or share with others who couldn't attend. These best practices will help you have a successful and productive meeting with Sawa.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+
+
+
+
+
+
+
+
+                
+            </div>
+        </div>
+        
+        <!-- Contact Form -->
+        <div class="bg-white rounded-xl border border-border p-6 shadow-sm">
+            <h2 class="text-2xl font-bold text-dark mb-6">Contact Support</h2>
+            
+            {% if message %}
+            <div id="confirmation-message" class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded mb-6 text-center">
+                {{ message }}
+            </div>
+            <script>
+                setTimeout(function() {
+                    var msg = document.getElementById('confirmation-message');
+                    if (msg) { msg.style.display = 'none'; }
+                }, 5000);
+            </script>
+            {% endif %}
+            
+            <form method="post" action="" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-dark font-medium mb-2" for="name">Your Name</label>
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Enter your name"
+                            class="w-full rounded-xl border border-border bg-white p-4 h-14 placeholder:text-medium focus:outline-none focus:ring-2 focus:ring-primary"
+                            required
+                        />
+                    </div>
+                    
+                    <div>
+                        <label class="block text-dark font-medium mb-2" for="email">Your Email</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            class="w-full rounded-xl border border-border bg-white p-4 h-14 placeholder:text-medium focus:outline-none focus:ring-2 focus:ring-primary"
+                            required
+                        />
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-dark font-medium mb-2" for="description">How can we help you?</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe your issue or question"
+                        class="w-full rounded-xl border border-border bg-white p-4 min-h-[150px] placeholder:text-medium focus:outline-none focus:ring-2 focus:ring-primary"
+                        required
+                    ></textarea>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button
+                        type="submit"
+                        class="flex-1 bg-primary text-white font-bold py-3 px-6 rounded-xl hover:bg-[#1569b8] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                    >
+                        Submit Request
+                    </button>
+                    
+                    <button
+                        type="reset"
+                        class="flex-1 bg-gray-200 text-dark font-bold py-3 px-6 rounded-xl hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="flex justify-center">
+      <div class="flex max-w-[960px] flex-1 flex-col">
+        <footer class="flex flex-col gap-6 px-5 py-10 text-center @container">
+          <div class="flex flex-wrap items-center justify-center gap-6 @[480px]:flex-row @[480px]:justify-around">
+            <a class="text-[#637588] text-base font-normal leading-normal min-w-40" href="#">Privacy Policy</a>
+            <a class="text-[#637588] text-base font-normal leading-normal min-w-40" href="#">Terms of Service</a>
+          </div>
+          <p class="text-[#637588] text-base font-normal leading-normal">2025, SAWA</p>
+        </footer>
+      </div>
+    </footer>
+    
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.accordion-item').forEach(item => {
+            const summary = item.querySelector('summary');
+            const content = item.querySelector('.accordion-content');
+            
+            summary.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isOpen = item.hasAttribute('open');
+                
+                if (isOpen) {
+                    item.removeAttribute('open');
+                } else {
+                    item.setAttribute('open', 'open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

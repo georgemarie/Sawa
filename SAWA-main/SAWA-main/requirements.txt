@@ -1,0 +1,16 @@
+Django>=4.0,<5.0
+djangorestframework
+Pillow
+django-crispy-forms
+channels
+elevenlabs==2.3.0
+pydantic==2.10.6
+python-dotenv==1.0.0
+pydub==0.25.1
+websockets==11.0.3
+requests>=2.25.0
+httpx
+typing-extensions
+pydantic-core
+annotated-types
+langdetect

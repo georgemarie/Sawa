@@ -1,0 +1,307 @@
+{% load static %}
+<html>
+<head>
+    <title>SAWA - Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/png">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1980e6',
+              secondary: '#0e161b',
+              accent: '#1f93e0',
+              dark: '#111418',
+              medium: '#637588',
+              light: '#e8eef3',
+              border: '#dce0e5',
+              success: '#10b981'
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      a {
+        transition: color 0.3s ease;
+      }
+      button, .eff {
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .eff:hover, button:hover {
+        transform: scale(1.05);
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .profile-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-top: 0.5rem;
+        width: 12rem;
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        z-index: 50;
+        animation: fadeIn 0.2s ease-out;
+      }
+      .profile-dropdown.show {
+        display: block;
+      }
+      .notification-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-top: 0.5rem;
+        width: 16rem;
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        z-index: 50;
+      }
+      .notification-dropdown.show {
+        display: block;
+      }
+      .save-status {
+        color: #078838;
+        font-weight: 500;
+        margin-left: 1rem;
+        display: none; /* Hidden by default */
+      }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e8eef3] px-10 py-3 bg-white fixed top-0 left-0 w-full z-50">
+        <div class="flex items-center gap-4 text-[#0e161b]">
+             <a href="/" class="block sm:hidden hover:text-[#1f93e0] transition-colors eff">
+      <img src="{% static 'assets/img/logo.png' %}" alt="Logo" style="height: 80px;" />
+    </a>
+
+    <a href="/" class="hidden sm:block hover:text-[#1f93e0] transition-colors eff">
+                    <img src="{% static 'assets/img/complete_logo.png' %}" alt="Logo" style="height: 60px;" />
+    </a>
+
+            
+        </div>
+        <div class="flex flex-1 justify-end gap-8">
+            <div class="flex gap-2">
+                <a href="{% url 'help' %}" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5" title="Help">
+                    <div class="text-[#0e161b]" data-icon="Question" data-size="20px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
+                    </div>
+                </a>
+
+                <a href="{% url 'settings' %}" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5" title="Settings">
+                    <div class="text-[#0e161b]" data-icon="Gear" data-size="20px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path></svg>
+                    </div>
+                </a>
+
+                <div class="relative">
+                    <button id="notificationButton" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#e8eef3] text-[#0e161b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5" title="Notifications">
+                        <div class="notification-icon" data-icon="Bell" data-size="20px" data-weight="regular">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path></svg>
+                        </div>
+                    </button>
+                    <div id="notificationDropdown" class="notification-dropdown">
+                        <div class="p-4 text-center text-medium">
+                            No current notifications
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <button id="profileDropdownButton" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("{% if user.profile_picture %}{{ user.profile_picture.url }}{% elif user.gender == "M" %}{% static "assets/img/male-avatar.png" %}{% else %}{% static "assets/img/female-avatar.png" %}{% endif %}");'></button>
+                    <div id="profileDropdown" class="profile-dropdown">
+                        <div class="px-4 py-2 border-b border-border">
+                            <p class="text-sm font-medium text-dark truncate max-w-[200px]">{{ user.first_name }} {{ user.last_name }}</p>
+                            <p class="text-xs text-medium truncate max-w-[200px]">{{ user.email }}</p>
+                        </div>
+                        <a href="/profile" class="block px-4 py-2 text-sm text-dark hover:bg-light">Profile</a>
+                        <a href="/logout" class="block px-4 py-2 text-sm text-red-500 hover:bg-red-50">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-24">
+        <div class="px-4 md:px-20 lg:px-40 py-5 flex justify-center">
+            <div class="w-full max-w-[960px]">
+                {% csrf_token %}
+
+                <div class="flex flex-wrap justify-between items-center gap-3 p-4">
+                    <h1 class="text-dark tracking-light text-4xl font-bold">Settings</h1>
+                </div>
+
+                <h2 class="text-dark text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Meeting</h2>
+                <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-3 justify-between border-b border-border">
+                    <div>
+                        <p class="text-dark text-base font-medium">Mute microphone when entering meeting</p>
+                        <p class="text-medium text-sm">Automatically mute your microphone upon joining a meeting</p>
+                    </div>
+                    <div class="shrink-0 flex items-center">
+                        <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-light p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+                            <div class="h-full w-[27px] rounded-full bg-white shadow-sm"></div>
+                            <input type="checkbox" name="mute_microphone_on_join" class="setting-toggle invisible absolute" {% if settings.mute_microphone_on_join %}checked{% endif %}/>
+                        </label>
+                        <span class="save-status">Saved!</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-3 justify-between border-b border-border">
+                    <div>
+                        <p class="text-dark text-base font-medium">Turn off video when entering meeting</p>
+                        <p class="text-medium text-sm">Automatically turn off your camera upon joining a meeting</p>
+                    </div>
+                    <div class="shrink-0 flex items-center">
+                        <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-light p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+                            <div class="h-full w-[27px] rounded-full bg-white shadow-sm"></div>
+                            <input type="checkbox" name="turn_off_video_on_join" class="setting-toggle invisible absolute" {% if settings.turn_off_video_on_join %}checked{% endif %}/>
+                        </label>
+                        <span class="save-status">Saved!</span>
+                    </div>
+                </div>
+
+                <h2 class="text-dark text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Translation</h2>
+                <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-3 justify-between border-b border-border">
+                    <div>
+                        <p class="text-dark text-base font-medium">Audio translation</p>
+                        <p class="text-medium text-sm">Automatically translate the audio of a meeting to your default language</p>
+                    </div>
+                    <div class="shrink-0 flex items-center">
+                        <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-light p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+                            <div class="h-full w-[27px] rounded-full bg-white shadow-sm"></div>
+                            <input type="checkbox" name="enable_audio_translation" class="setting-toggle invisible absolute" {% if settings.enable_audio_translation %}checked{% endif %}/>
+                        </label>
+                        <span class="save-status">Saved!</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-3 justify-between border-b border-border">
+                    <div>
+                        <p class="text-dark text-base font-medium">Closed caption translation</p>
+                        <p class="text-medium text-sm">Automatically translate the text of a meeting to your default language</p>
+                    </div>
+                    <div class="shrink-0 flex items-center">
+                        <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-light p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+                            <div class="h-full w-[27px] rounded-full bg-white shadow-sm"></div>
+                            <input type="checkbox" name="enable_caption_translation" class="setting-toggle invisible absolute" {% if settings.enable_caption_translation %}checked{% endif %}/>
+                        </label>
+                        <span class="save-status">Saved!</span>
+                    </div>
+                </div>
+
+                <h2 class="text-dark text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notification preferences</h2>
+                <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-3 justify-between border-b border-border">
+                    <div>
+                        <p class="text-dark text-base font-medium">Meeting Reminder</p>
+                        <p class="text-medium text-sm">Receive a notification 10 minutes before your meeting starts</p>
+                    </div>
+                    <div class="shrink-0 flex items-center">
+                        <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-light p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+                            <div class="h-full w-[27px] rounded-full bg-white shadow-sm"></div>
+                            <input type="checkbox" name="receive_meeting_reminders" class="setting-toggle invisible absolute" {% if settings.receive_meeting_reminders %}checked{% endif %} />
+                        </label>
+                        <span class="save-status">Saved!</span>
+                    </div>
+                </div>
+
+                <h2 class="text-dark text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Activity Overview</h2>
+                <div class="flex flex-wrap gap-4 p-4">
+                    <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-border bg-white">
+                        <p class="text-dark text-base font-medium">Meetings Hosted</p>
+                        <p class="text-dark tracking-light text-2xl font-bold">{{ hosted_meetings }}</p>
+                        <p class="text-green-600 text-base font-medium">+10%</p>
+                    </div>
+                    <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-border bg-white">
+                        <p class="text-dark text-base font-medium">Meetings Joined</p>
+                        <p class="text-dark tracking-light text-2xl font-bold">{{ joined_meetings }}</p>
+                        <p class="text-red-600 text-base font-medium">-5%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script>
+$(document).ready(function() {
+    // Dropdown Toggles
+    const setupDropdown = (buttonId, dropdownId) => {
+        const button = $(`#${buttonId}`);
+        const dropdown = $(`#${dropdownId}`);
+        button.on('click', (e) => {
+            e.stopPropagation();
+            // Hide other dropdowns
+            $('.profile-dropdown, .notification-dropdown').not(dropdown).removeClass('show');
+            dropdown.toggleClass('show');
+        });
+    };
+    setupDropdown('profileDropdownButton', 'profileDropdown');
+    setupDropdown('notificationButton', 'notificationDropdown');
+    
+    // Close dropdowns on outside click
+    $(document).on('click', (e) => {
+        if (!$(e.target).closest('.relative').length) {
+            $('.profile-dropdown, .notification-dropdown').removeClass('show');
+        }
+    });
+
+    // AJAX for Settings
+    const csrftoken = $('input[name=csrfmiddlewaretoken]').val();
+    $('.setting-toggle').on('change', function() {
+        const settingName = $(this).attr('name');
+        const settingValue = $(this).is(':checked');
+        const statusElement = $(this).closest('.flex').find('.save-status');
+
+        $.ajax({
+            url: "{% url 'update_settings' %}",
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'setting_name': settingName,
+                'setting_value': settingValue
+            }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    statusElement.fadeIn(300).delay(1500).fadeOut(400);
+                } else {
+                    console.error('Error:', response.message);
+                    alert('An error occurred. Please try again.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+                alert('A server error occurred. Please try again later.');
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
+

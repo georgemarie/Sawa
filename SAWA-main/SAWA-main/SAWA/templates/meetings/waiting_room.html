@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Waiting for Host - {{ meeting.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #1980e6;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .pulse-dot {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-lg p-8 max-w-md w-full mx-4">
+      <div class="text-center">
+        <!-- Loading Spinner -->
+        <div class="flex justify-center mb-6">
+          <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Meeting Info -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">
+          {{ meeting.title }}
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Waiting for host to start the meeting...
+        </p>
+
+        <!-- Status Message -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div class="flex items-center justify-center space-x-2">
+            <div class="w-2 h-2 bg-blue-500 rounded-full pulse-dot"></div>
+            <span class="text-blue-800 font-medium"
+              >Host hasn't started the meeting yet</span
+            >
+          </div>
+        </div>
+
+        <!-- Meeting Details -->
+        <div class="text-left bg-gray-50 rounded-lg p-4 mb-6">
+          <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex justify-between">
+              <span>Date:</span>
+              <span class="font-medium"
+                >{{ meeting.scheduled_date|date:"M d, Y" }}</span
+              >
+            </div>
+            <div class="flex justify-between">
+              <span>Time:</span>
+              <span class="font-medium"
+                >{{ meeting.meeting_time|date:"g:i A" }}</span
+              >
+            </div>
+            {% if meeting.description %}
+            <div class="flex justify-between">
+              <span>Description:</span>
+              <span class="font-medium"
+                >{{ meeting.description|truncatechars:30 }}</span
+              >
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+          <button
+            id="refreshBtn"
+            class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            Check Again
+          </button>
+          <a
+            href="/dashboard"
+            class="block w-full bg-gray-200 text-gray-800 py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors text-center"
+          >
+            Back to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const meetingId = "{{ meeting.meeting_id }}";
+      let checkInterval;
+
+      // Function to check if meeting has started
+      async function checkMeetingStatus() {
+        try {
+          const response = await fetch(`/meetings/check_status/${meetingId}/`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.is_started) {
+              // Meeting has started, redirect to join
+              window.location.href = `/meetings/join/${meetingId}/`;
+            }
+          }
+        } catch (error) {
+          console.error("Error checking meeting status:", error);
+        }
+      }
+
+      // Manual refresh button
+      document
+        .getElementById("refreshBtn")
+        .addEventListener("click", checkMeetingStatus);
+
+      // Auto-check every 3 seconds
+      checkInterval = setInterval(checkMeetingStatus, 3000);
+
+      // Clean up interval when page is unloaded
+      window.addEventListener("beforeunload", () => {
+        if (checkInterval) {
+          clearInterval(checkInterval);
+        }
+      });
+
+      // Initial check
+      checkMeetingStatus();
+    </script>
+  </body>
+</html>

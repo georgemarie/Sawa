@@ -1,0 +1,1152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sawa App - Global Conversations, Local Understanding</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1f93e0;
+            --primary-dark: #166bb3;
+            --secondary: #f8fafc;
+            --dark: #111517;
+            --medium: #647987;
+            --light: #f0f3f4;
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', 'Noto Sans', sans-serif;
+            color: var(--dark);
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(31, 147, 224, 0.25);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            border: 1px solid var(--light);
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light);
+            transform: translateY(-2px);
+        }
+        
+        .section-padding {
+            padding: 5rem 1.5rem;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(120deg, #1a75bc 0%, #2da1f0 100%);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f3f4;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: #f0f9ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon i {
+            color: #1f93e0;
+            font-size: 1.75rem;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .pricing-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .pricing-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .popular-plan {
+            position: relative;
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-down {
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .nav-scrolled {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .demo-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 900px;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .demo-modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 0, 0, 0.7);
+            transform: rotate(90deg);
+        }
+        
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a75bc 0%, #2da1f0 100%);
+            color: white;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .play-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .video-info {
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-white transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center">
+                        <div>
+                            <img 
+                                src="{% static 'assets/img/complete_logo.png' %}" 
+                                alt="Logo" 
+                                style="height: 60px;"
+                            />
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-700 hover:text-primary font-medium transition-colors">Features</a>
+                    <a href="#how-it-works" class="text-gray-700 hover:text-primary font-medium transition-colors">How It Works</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-primary font-medium transition-colors">Testimonials</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-primary font-medium transition-colors">Pricing</a>
+                    <a href="#faq" class="text-gray-700 hover:text-primary font-medium transition-colors">FAQ</a>
+                </nav>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="{% url 'login' %}" class="btn-secondary px-5 py-2 rounded-lg font-semibold">Login</a>
+                    <a href="/register" class="btn-primary px-5 py-2 rounded-lg font-semibold">Join Us Now</a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 px-4 border-t">
+            <div class="flex flex-col space-y-4">
+                <a href="#features" class="text-gray-700 font-medium py-2">Features</a>
+                <a href="#how-it-works" class="text-gray-700 font-medium py-2">How It Works</a>
+                <a href="#testimonials" class="text-gray-700 font-medium py-2">Testimonials</a>
+                <a href="#pricing" class="text-gray-700 font-medium py-2">Pricing</a>
+                <a href="#faq" class="text-gray-700 font-medium py-2">FAQ</a>
+                <div class="pt-4 flex flex-col space-y-3">
+                    <a href="{% url 'login' %}" class="btn-secondary px-5 py-3 rounded-lg font-semibold text-center">Login</a>
+                    <a href="/register" class="btn-primary px-5 py-3 rounded-lg font-semibold text-center">Join Us Now</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="pt-28 pb-20 md:pt-36 md:pb-28 hero-gradient text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0 fade-in">
+                    <!-- Message Section -->
+                    {% if messages %}
+                    <div id="message-container" class="px-4 py-3 space-y-3">
+                        {% for message in messages %}
+                        <div class="slide-down rounded-xl p-4 text-sm font-medium leading-normal flex items-center
+                            {% if message.tags == 'success' %}
+                                bg-green-50 text-green-800 border border-green-200
+                            {% elif message.tags == 'error' %}
+                                bg-red-50 text-red-800 border border-red-200
+                            {% elif message.tags == 'warning' %}
+                                bg-yellow-50 text-yellow-800 border border-yellow-200
+                            {% else %}
+                                bg-blue-50 text-blue-800 border border-blue-200
+                            {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                {% if message.tags == 'success' %}
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                {% elif message.tags == 'error' %}
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                {% elif message.tags == 'warning' %}
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                {% else %}
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                {% endif %}
+                            </svg>
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                        Global Conversations, <span class="text-blue-100">Local Understanding</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-blue-100 mb-8 max-w-lg">
+                        Enhance your global team meetings, webinars, education, and customer support with real-time translation.
+                    </p>
+                    
+                    <div class="w-full max-w-[600px]">
+                        <form method="POST" action="{% url 'join_meeting_outer' %}" class="flex flex-col min-w-40 h-14 w-full max-w-[480px]">
+                            {% csrf_token %}
+                            <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+                                <div class="text-[#647987] flex border border-[#dce1e5] bg-white items-center justify-center pl-[15px] rounded-l-xl border-r-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M168,112a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,112Zm-8,24H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm64-80V200a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V56A16,16,0,0,1,48,40H208A16,16,0,0,1,224,56ZM208,200V56H48V200H208Z"/>
+                                    </svg>
+                                </div>
+                                <input
+                                    name="meeting_id"
+                                    placeholder="Enter a code or link"
+                                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111517] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-full placeholder:text-[#647987] px-[15px] rounded-r-none border-r-0 pr-2 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal"
+                                    value=""
+                                />
+                                <div class="flex items-center justify-center rounded-r-xl border-l-0 border border-[#dce1e5] bg-white pr-[7px]">
+                                    <button type="submit" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1f93e0] text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">Join Meeting</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+                        <a href="/register" class="btn-primary px-8 py-4 rounded-xl font-bold text-lg text-center">
+                            Start Free Trial
+                        </a>
+                        <button id="demo-btn" class="btn-secondary px-8 py-4 rounded-xl font-bold text-lg text-center cursor-pointer">
+                            Watch Demo <i class="ml-2 fas fa-play-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center fade-in">
+                  <div class="relative">
+                      <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-96"></div>
+                      <div class="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-xl p-4 w-64">
+                          <div class="flex items-center mb-3">
+                              <div class="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                                  <i class="fas fa-user text-blue-600"></i>
+                              </div>
+                              <div class="ml-3">
+                                  <div class="font-bold">Sarah Johnson</div>
+                                  <div class="text-sm text-gray-500">Real-time Translation</div>
+                              </div>
+                          </div>
+                          <p class="text-gray-700 italic">"This app made our international meetings so much more productive!"</p>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Powerful Features</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Everything you need for seamless multilingual communication
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">100+ Languages</h3>
+                    <p class="text-gray-600 mb-4">
+                        Supports 100+ languages and language variants
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Comprehensive language coverage</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Regional dialects included</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Continuous updates</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Real-time Translation</h3>
+                    <p class="text-gray-600 mb-4">
+                        Translate in real-time
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Ultra-low latency</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Industry-leading accuracy</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Context-aware translation</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Audio Translation</h3>
+                    <p class="text-gray-600 mb-4">
+                        Translate spoken audio in real-time
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Clear voice recognition</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Background noise cancellation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Multi-speaker detection</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Interpretation</h3>
+                    <p class="text-gray-600 mb-4">
+                        Professional language interpretation services
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Certified interpreters</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Industry specialization</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>24/7 availability</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Text Translation</h3>
+                    <p class="text-gray-600 mb-4">
+                        Translate text in real-time
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Format preservation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Document translation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Chat translation</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Translation History</h3>
+                    <p class="text-gray-600 mb-4">
+                        Access to translation history
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Searchable archive</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Export options</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Custom retention policies</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4">How Sawa Works</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Seamless integration into your workflow in just three simple steps
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Step 1 -->
+            <div class="flex flex-col items-center text-center bg-white rounded-xl shadow-lg p-8 transition hover:-translate-y-2 hover:shadow-2xl fade-in">
+                <div class="w-16 h-16 flex items-center justify-center rounded-full bg-blue-100 mb-6">
+                    <!-- Original SVG icon -->
+                    <div class="text-[#111517]" data-icon="WebhooksLogo" data-size="32px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M178.16,184H111.32A48,48,0,1,1,25.6,147.19a8,8,0,0,1,12.8,9.61A31.69,31.69,0,0,0,32,176a32,32,0,0,0,64,0,8,8,0,0,1,8-8h74.16a16,16,0,1,1,0,16ZM64,192a16,16,0,0,0,14.08-23.61l35.77-58.14a8,8,0,0,0-2.62-11,32,32,0,1,1,46.1-40.06A8,8,0,1,0,172,52.79a48,48,0,1,0-75.62,55.33L64.44,160c-.15,0-.29,0-.44,0a16,16,0,0,0,0,32Zm128-64a48.18,48.18,0,0,0-18,3.49L142.08,79.6A16,16,0,1,0,128,88l.44,0,35.78,58.15a8,8,0,0,0,11,2.61A32,32,0,1,1,192,208a8,8,0,0,0,0,16,48,48,0,0,0,0-96Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Connect your platform</h3>
+                <p class="text-gray-600">
+                    Our API integrates with your platform to translate text or speech.
+                </p>
+            </div>
+            <!-- Step 2 -->
+            <div class="flex flex-col items-center text-center bg-white rounded-xl shadow-lg p-8 transition hover:-translate-y-2 hover:shadow-2xl fade-in">
+                <div class="w-16 h-16 flex items-center justify-center rounded-full bg-blue-100 mb-6">
+                    <!-- Original SVG icon -->
+                    <div class="text-[#111517]" data-icon="Translate" data-size="32px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M239.15,212.42l-56-112a8,8,0,0,0-14.31,0l-21.71,43.43A88,88,0,0,1,100,126.93,103.65,103.65,0,0,0,127.69,64H152a8,8,0,0,0,0-16H96V32a8,8,0,0,0-16,0V48H24a8,8,0,0,0,0,16h87.63A87.76,87.76,0,0,1,88,116.35a87.74,87.74,0,0,1-19-31,8,8,0,1,0-15.08,5.34A103.63,103.63,0,0,0,76,127a87.55,87.55,0,0,1-52,17,8,8,0,0,0,0,16,103.46,103.46,0,0,0,64-22.08,104.18,104.18,0,0,0,51.44,21.31l-26.6,53.19a8,8,0,0,0,14.31,7.16L140.94,192h70.11l13.79,27.58A8,8,0,0,0,232,224a8,8,0,0,0,7.15-11.58ZM148.94,176,176,121.89,203.05,176Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Choose your languages</h3>
+                <p class="text-gray-600">
+                    We support 100+ languages and language variants.
+                </p>
+            </div>
+            <!-- Step 3 -->
+            <div class="flex flex-col items-center text-center bg-white rounded-xl shadow-lg p-8 transition hover:-translate-y-2 hover:shadow-2xl fade-in">
+                <div class="w-16 h-16 flex items-center justify-center rounded-full bg-blue-100 mb-6">
+                    <!-- Original SVG icon -->
+                    <div class="text-[#111517]" data-icon="ChatCircleDots" data-size="32px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Translate in real-time</h3>
+                <p class="text-gray-600">
+                    Translators and interpreters are available 24/7 for any language pair.
+                </p>
+            </div>
+        </div>
+    </div>
+    </section>
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Testimonials</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    See what industry leaders say about transforming their communication
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="testimonial-avatar" style='background-image: url("https://cdn.usegalileo.ai/sdxl10/280a1a13-b902-4048-8b49-8256367f91eb.png");'></div>
+                        <div>
+                            <p class="text-lg font-semibold">Jane Smith</p>
+                            <p class="text-gray-500 text-sm">CTO, GlobalTech Inc.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-700 italic">"This translation service is amazing! It has helped us in our global team meetings. The real-time translation has eliminated language barriers across our international offices."</p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="testimonial-avatar" style='background-image: url("https://cdn.usegalileo.ai/sdxl10/f9de8372-4e61-466b-bf29-1ff736389ddb.png");'></div>
+                        <div>
+                            <p class="text-lg font-semibold">John Doe</p>
+                            <p class="text-gray-500 text-sm">Director, EduGlobal</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-700 italic">"I highly recommend this service for anyone looking for real-time translation. It's transformed our international student programs and made cross-cultural communication effortless."</p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="testimonial-avatar" style='background-image: url("https://cdn.usegalileo.ai/sdxl10/c1f159ed-ae93-44a2-899e-0f99278a3392.png");'></div>
+                        <div>
+                            <p class="text-lg font-semibold">Emma Johnson</p>
+                            <p class="text-gray-500 text-sm">Global Support Lead</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-700 italic">"The support provided by the team is top-notch. Always there to help with any translation needs. Our customer satisfaction scores have increased by 40% since implementation."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Choose the plan that fits your team's needs. All plans include a 14-day free trial.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Basic Plan -->
+                <div class="pricing-card bg-white rounded-xl shadow-lg overflow-hidden fade-in">
+                    <div class="p-8 border-b">
+                        <h3 class="text-2xl font-bold mb-2">Starter</h3>
+                        <p class="text-gray-600 mb-6">Perfect for small teams and individuals</p>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold">$0</span>
+                            <span class="text-gray-600">/month</span>
+                        </div>
+                        <a href="#" class="btn-secondary block text-center py-3 rounded-lg font-semibold">
+                            Get Started
+                        </a>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>100 minutes of translation/month</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>5 languages supported</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Text translation</span>
+                            </li>
+                            <li class="flex items-center text-gray-400">
+                                <i class="fas fa-times mr-3"></i>
+                                <span>Voice translation</span>
+                            </li>
+                            <li class="flex items-center text-gray-400">
+                                <i class="fas fa-times mr-3"></i>
+                                <span>Live interpretation</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Pro Plan - Popular -->
+                <div class="pricing-card bg-white rounded-xl shadow-xl overflow-hidden popular-plan fade-in">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="p-8 border-b bg-blue-50">
+                        <h3 class="text-2xl font-bold mb-2">Professional</h3>
+                        <p class="text-gray-600 mb-6">For growing teams and businesses</p>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold">$29</span>
+                            <span class="text-gray-600">/user/month</span>
+                        </div>
+                        <a href="/register" class="btn-primary block text-center py-3 rounded-lg font-semibold">
+                            Start Free Trial
+                        </a>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Unlimited translation minutes</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>50+ languages supported</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Text and voice translation</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>5 hours live interpretation/month</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Meeting recording</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="pricing-card bg-white rounded-xl shadow-lg overflow-hidden fade-in">
+                    <div class="p-8 border-b">
+                        <h3 class="text-2xl font-bold mb-2">Enterprise</h3>
+                        <p class="text-gray-600 mb-6">For large organizations with custom needs</p>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold">Custom</span>
+                        </div>
+                        <a href="#" class="btn-secondary block text-center py-3 rounded-lg font-semibold">
+                            Contact Sales
+                        </a>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Unlimited everything</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>100+ languages supported</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Dedicated account manager</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Custom integrations</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>24/7 priority support</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Frequently Asked Questions</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Everything you need to know about Sawa
+                </p>
+            </div>
+            
+            <div class="space-y-6 fade-in">
+                <!-- FAQ 1 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="flex justify-between items-center w-full p-6 text-left">
+                        <h3 class="text-lg font-semibold">How accurate is the real-time translation?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">
+                            Sawa uses advanced AI technology combined with human-reviewed translations to achieve industry-leading accuracy of 95-98% for major languages. For specialized terminology, our system learns from context and can be customized for your industry.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 2 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="flex justify-between items-center w-full p-6 text-left">
+                        <h3 class="text-lg font-semibold">What platforms does Sawa integrate with?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">
+                            Sawa integrates with all major platforms including Zoom, Microsoft Teams, Google Meet, Webex, and Slack. We also offer a standalone web app and mobile applications for iOS and Android. Our API allows for custom integrations with proprietary systems.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 3 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="flex justify-between items-center w-full p-6 text-left">
+                        <h3 class="text-lg font-semibold">Is my data secure with Sawa?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">
+                            Security is our top priority. All data is encrypted in transit and at rest using AES-256 encryption. We are GDPR compliant and offer enterprise-grade security features including SSO, SCIM provisioning, and customizable data retention policies. We never sell or share your data with third parties.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 4 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="flex justify-between items-center w-full p-6 text-left">
+                        <h3 class="text-lg font-semibold">How does the live interpretation service work?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">
+                            Our live interpretation connects you with certified professional interpreters in real-time. Simply schedule your meeting through our platform, and an interpreter will join your call. All interpreters are vetted, experienced professionals with expertise in various industries. You can request specific interpreters for recurring meetings.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 5 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="flex justify-between items-center w-full p-6 text-left">
+                        <h3 class="text-lg font-semibold">Can I try Sawa before purchasing?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">
+                            Absolutely! We offer a 14-day free trial of our Professional plan with no credit card required. You get full access to all features during the trial period. For enterprise customers, we offer extended trials and custom demonstrations based on your specific use case.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-6">Ready to Break Language Barriers?</h2>
+            <p class="text-xl mb-10 max-w-2xl mx-auto">
+                Join thousands of teams who are transforming their global communication with Sawa
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="/register" class="btn-primary px-8 py-4 rounded-xl font-bold text-lg bg-white text-blue-600 hover:bg-blue-50">
+                    Start Free Trial
+                </a>
+                <a href="#" class="btn-secondary px-8 py-4 rounded-xl font-bold text-lg bg-transparent border-2 border-white hover:bg-white/10" style="color: white;">
+                    Schedule a Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="flex justify-center fade-in">
+        <div class="flex max-w-[960px] flex-1 flex-col">
+            <footer class="flex flex-col gap-6 px-5 py-10 text-center @container">
+                <div class="flex flex-wrap items-center justify-center gap-6 @[480px]:flex-row @[480px]:justify-around">
+                    <a class="text-[#647987] text-base font-normal leading-normal min-w-40 hover:text-[#1f93e0]" href="#">About Us</a>
+                    <a class="text-[#647987] text-base font-normal leading-normal min-w-40 hover:text-[#1f93e0]" href="{%url 'help'%}">Contact Us</a>
+                    <a class="text-[#647987] text-base font-normal leading-normal min-w-40 hover:text-[#1f93e0]" href="#">Privacy Policy</a>
+                    <a class="text-[#647987] text-base font-normal leading-normal min-w-40 hover:text-[#1f93e0]" href="#">Terms of Service</a>
+                </div>
+                <p class="text-[#647987] text-base font-normal leading-normal">© 2025 Sawa. All rights reserved.</p>
+            </footer>
+        </div>
+    </footer>
+
+
+    <!-- Demo Video Modal -->
+    <div id="demo-modal" class="demo-modal">
+        <div class="close-modal" id="close-modal">
+            <i class="fas fa-times text-xl"></i>
+        </div>
+        <div class="modal-content">
+            <div class="video-container">
+                <!-- Actual video player -->
+                <iframe id="demo-video" src="https://player.vimeo.com/video/824804225?h=6c9b0e0a9b&color=1f93e0&title=0&byline=0&portrait=0" 
+                        frameborder="0" 
+                        allow="autoplay; fullscreen; picture-in-picture" 
+                        allowfullscreen></iframe>
+                
+                <!-- Placeholder that shows before video loads -->
+                <div id="video-placeholder" class="video-placeholder">
+                    <i class="fas fa-play-circle play-icon"></i>
+                    <div class="video-info">
+                        <h3 class="text-2xl font-bold mb-2">Sawa App Demo</h3>
+                        <p class="text-xl mb-4">See how Sawa transforms multilingual communication</p>
+                        <p class="opacity-80">Loading demo video...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-gray-50">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-1">Sawa App Demo</h3>
+                        <p class="text-gray-600">See our platform in action</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <a href="/register" class="btn-primary px-6 py-3 rounded-lg font-semibold">
+                            Start Free Trial
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 text-blue-600 rounded-lg p-3 mr-3">
+                            <i class="fas fa-globe text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">Real-time Translation</h4>
+                            <p class="text-gray-600 text-sm">See how Sawa translates conversations instantly across 100+ languages</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 text-blue-600 rounded-lg p-3 mr-3">
+                            <i class="fas fa-users text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">Team Collaboration</h4>
+                            <p class="text-gray-600 text-sm">Watch how teams collaborate seamlessly across language barriers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // FAQ accordion
+        document.querySelectorAll('#faq button').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+            }
+        });
+        
+        // Animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in').forEach((el) => {
+            observer.observe(el);
+        });
+        
+        // Message fade-out
+        setTimeout(() => {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.transition = 'opacity 0.5s ease';
+                messageContainer.style.opacity = '0';
+                setTimeout(() => messageContainer.remove(), 500);
+            }
+        }, 3000);
+
+
+
+        // Demo Modal functionality
+        // Load Vimeo player API script
+        const vimeoScript = document.createElement('script');
+        vimeoScript.src = 'https://player.vimeo.com/api/player.js';
+        document.head.appendChild(vimeoScript);
+        
+        // Demo Modal functionality
+        const demoBtn = document.getElementById('demo-btn');
+        const demoModal = document.getElementById('demo-modal');
+        const closeModal = document.getElementById('close-modal');
+        const videoPlaceholder = document.getElementById('video-placeholder');
+        let player = null;
+        
+        demoBtn.addEventListener('click', () => {
+            demoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize player if not already created
+            if (!player) {
+                const iframe = document.getElementById('demo-video');
+                player = new Vimeo.Player(iframe);
+                
+                // Hide placeholder when video is ready
+                player.ready().then(() => {
+                    videoPlaceholder.style.display = 'none';
+                    player.play();
+                }).catch(error => {
+                    console.error('Error loading video:', error);
+                });
+            } else {
+                videoPlaceholder.style.display = 'none';
+                player.play();
+            }
+        });
+        
+        closeModal.addEventListener('click', () => {
+            demoModal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            if (player) {
+                player.pause();
+                videoPlaceholder.style.display = 'flex';
+            }
+        });
+        
+        // Close modal when clicking outside content
+        demoModal.addEventListener('click', (e) => {
+            if (e.target === demoModal) {
+                demoModal.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                if (player) {
+                    player.pause();
+                    videoPlaceholder.style.display = 'flex';
+                }
+            }
+        });
+        
+        // Close with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && demoModal.classList.contains('active')) {
+                demoModal.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                if (player) {
+                    player.pause();
+                    videoPlaceholder.style.display = 'flex';
+                }
+            }
+        });
+
+
+    </script>
+</body>
+</html>

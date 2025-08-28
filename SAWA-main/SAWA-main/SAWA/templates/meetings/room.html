@@ -1,0 +1,847 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #8ab4f8;
+      --danger-red: #f28b82;
+      --text-dark: #e8eaed;
+      --bg-dark: #202124;
+      --bg-light: #ffffff;
+      --control-bg: #3c4043;
+      --control-bg-hover: #4a4d50;
+      --surface-1: rgba(255, 255, 255, 0.05);
+      --surface-2: rgba(255, 255, 255, 0.1);
+      --surface-hover: rgba(255, 255, 255, 0.2);
+      --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      overflow: hidden;
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex-grow: 1;
+      position: relative;
+    }
+
+    #video-streams {
+      display: grid;
+      gap: 4px;
+      padding: 4px;
+      height: calc(100vh - 100px);
+      width: 100vw;
+      box-sizing: border-box;
+      background: var(--bg-dark);
+      transition: all 0.3s ease;
+    }
+
+    /* Layouts for different participant counts */
+    #video-streams.participants-1 {
+      grid-template-columns: 1fr;
+    }
+
+    #video-streams.participants-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    #video-streams.participants-3,
+    #video-streams.participants-4 {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+    }
+
+    #video-streams.participants-3 .video-container:first-child {
+      grid-area: 1 / 1 / 2 / 3;
+    }
+
+    #video-streams.participants-5,
+    #video-streams.participants-6 {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+    }
+
+    #video-streams.participants-7,
+    #video-streams.participants-8,
+    #video-streams.participants-9 {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    }
+
+    .video-container {
+      background-color: var(--control-bg);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .video-player {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #3c4043;
+      color: white;
+    }
+
+    .video-placeholder-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 16px;
+      background-position: center;
+      background-size: cover;
+      border: 2px solid var(--primary-blue);
+    }
+
+    .video-placeholder-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .username-wrapper {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+
+    #controls-wrapper {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      background: var(--control-bg);
+      padding: 12px 24px;
+      border-radius: 50px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      border: 1px solid var(--border-color);
+    }
+
+    .control-button {
+      background: var(--surface-2);
+      border: none;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .control-button img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .control-button:hover {
+      background: var(--surface-hover);
+    }
+
+    .control-button.active {
+      background: var(--primary-blue);
+    }
+
+    .control-button.active img {
+      filter: brightness(0) invert(1);
+    }
+
+    #leave-btn {
+      background: var(--danger-red);
+    }
+
+    #leave-btn:hover {
+      background: #d93025;
+    }
+
+    .side-panel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 320px;
+      height: 100vh;
+      background: var(--bg-dark);
+      box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 1100;
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .side-panel.open {
+      transform: translateX(0);
+    }
+
+    .side-panel-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-1);
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .side-panel-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .side-panel-content {
+      padding: 16px;
+      flex-grow: 1;
+      overflow-y: auto;
+      color: white;
+    }
+
+    #participants-panel .participants-actions {
+      flex-shrink: 0;
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-dark);
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .participants-action-btn {
+      flex-grow: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    #mute-all-btn {
+      background: var(--danger-red);
+      color: #fff;
+    }
+
+    #mute-all-btn:hover {
+      background: #c62828;
+    }
+
+    .error-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--danger-red);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      display: none;
+      z-index: 2000;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .meeting-info {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: rgba(32, 33, 36, 0.9);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: white;
+      z-index: 900;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+    }
+
+    .meeting-info p {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .settings-section {
+      margin-bottom: 24px;
+    }
+
+    .settings-section h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: var(--primary-blue);
+      font-weight: 500;
+    }
+
+    .settings-select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--surface-2);
+      color: white;
+      font-size: 1rem;
+    }
+
+    .settings-select:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+    }
+
+    .settings-select option {
+      background: var(--bg-dark);
+      color: white;
+    }
+
+    .captions-container {
+      position: absolute;
+      bottom: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      text-align: center;
+      max-width: 70%;
+      z-index: 999;
+      display: none;
+    }
+
+    .captions-container.active {
+      display: block;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      #video-streams {
+        height: calc(100vh - 80px);
+        /* Adjust for controls */
+        grid-template-columns: 1fr !important;
+        grid-auto-rows: 1fr;
+      }
+
+      #video-streams.participants-3 .video-container:first-child {
+        grid-area: auto;
+      }
+
+      #controls-wrapper {
+        bottom: 10px;
+        padding: 10px;
+        gap: 0.5rem;
+      }
+
+      .control-button {
+        width: 44px;
+        height: 44px;
+      }
+
+      .control-button img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .side-panel {
+        width: 100%;
+      }
+
+      .meeting-info {
+        top: 10px;
+        left: 10px;
+      }
+
+      .captions-container {
+        bottom: 90px;
+        font-size: 16px;
+        max-width: 90%;
+      }
+    }
+
+    #video-streams.screen-sharing-active {
+      grid-template-columns: 3fr 1fr; /* Main view takes 3/4, sidebar takes 1/4 */
+      grid-template-rows: 1fr; /* A single row */
+    }
+
+    #video-streams.screen-sharing-active .video-container {
+      grid-column: 2 / 3; /* The second column */
+      grid-row: auto;
+    }
+
+    #video-streams.screen-sharing-active .video-container.screen-share-view {
+      grid-column: 1 / 2; /* The first column */
+      grid-row: 1 / 2;    /* The first row */
+    }
+
+    /* We might also need to adjust the layout of the sidebar videos */
+    .screen-sharing-active #remote-streams-when-sharing {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <div class="error-message" id="error-message"></div>
+
+    <div class="meeting-info">
+      <p>Meeting: <span id="room-name">{{room_name}}</span></p>
+    </div>
+
+    <section id="video-streams"></section>
+
+    <div class="captions-container" id="captions-container"></div>
+
+    <section id="controls-wrapper">
+      <button class="control-button" id="mic-btn" title="Toggle microphone">
+        <!-- Mic ON Icon -->
+        <svg class="mic-on" viewBox="0 0 24 24" fill="white">
+          <path
+            d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+        </svg>
+        <!-- Mic OFF Icon (initially hidden) -->
+        <svg class="mic-off" viewBox="0 0 24 24" fill="white" style="display: none;">
+          <path
+            d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z" />
+        </svg>
+      </button>
+
+      <button class="control-button" id="camera-btn" title="Toggle camera">
+        <!-- Camera ON Icon -->
+        <svg class="camera-on" viewBox="0 0 24 24" fill="white">
+          <path
+            d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM15 16H5V8h10v8z" />
+        </svg>
+        <!-- Camera OFF Icon (initially hidden) -->
+        <svg class="camera-off" viewBox="0 0 24 24" fill="white" style="display: none;">
+          <path
+            d="M21 6.5l-4 4V7c0-.55-.45-1-1-1H9.82L21 17.18V6.5zM3.27 2L2 3.27 4.73 6H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.21 0 .39-.08.54-.18L19.73 21 21 19.73 3.27 2z" />
+        </svg>
+      </button>
+
+      <button class="control-button" id="dubbing-btn" title="Toggle Dubbing">
+        <img style="width: 24px; height: 24px;"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFI0lEQVR4nOWbe4wdUxzHp4qVDevd1KNFW7YqHmk9lmSboCQEQfxBiBZbQSKNIh6V2LTdRgRJExElm3hGE6FSRFSQaAUNNmkRj23Resa7qLeP/PhN/e7pzNyZuWdmZ3a/yeTeex6/c873nnN+3/OYICgBwBhgJnBdyc9VwHRgVBntjARwLbCZocVqYEIwRI2vCj4G9iiz8WMq8M+7uK1MAmZSPawvk4CbPFVahtHuwHwPtv4sk4BeDxXeCIxWe9sAG1o1WDcCFjg2+0YaAZ2OzQOBv0cKAStj7L48UgjoibF76Ugg4Gegw9ja3nzfuRV9URcCHnRs3eH8fni4EzDD2DlIJ77JJuzk4UzAxtD3q51FGt5nwnLrgjoQMD+moZ84xPQNVwI6E7r6Sa1qgqoT8FKTye6hVjVB1Qm4xOTvUHdoIe5vl1Y0QZUJ2Cw+3uTvyUlSbQl4wMm/MucwqS0BJ+YsJ5Mm8N9SPwR8JC4vyIGsmqCZsQ7dyXkd+Ilq45Q8miCp8ccAn1EfLI2Qy00R1/jJwPfUC65LXNUKAS+YNN+IqwH2CkqELHmBI4HlGUiYbfLfnosA4GAT/wdwVDDEyEDCu9p7JwKDKfM0TrY0qqnlQQWgPaEojE3av18UVAA6HIrCtCR/3ZuzwhOAfuByjyQUhauLIOBRY2NSxQlYVQQB7xkbEytOgKDbGwHAduo9BL/aXZsKE7B6Sz3JQIAuPG5xnrtM/h+BJSmfK5NublA87sxEALC3+ad94bQCCVgPrGmSZlYWAvb0fOFBtHtXQQQ8LrdBgB2B+4C/YtKtyDoEjhA34lxEksJCPKvCKs0T2/gcBMjK9W3p1rKoi7B1uByuAGvNmmcTcI6PSVDGcuRxditwGriTL7tRBfW2SID0iBDzYtJIdzw+i4eoEwE3mPzPAIuBZcDTwP3ArXraI7hnWBEA7KaNTYt30l5arDQB/Cd+blS/nxWPAW21JQAYq0oqCgM6KZ6houliuZkVke7uWhIA7KsCwyIc31FHVxeYuN+cfF21IgBoA14zacWfni27sybsRSfPKyZuIfCI+f1k3QiYa9L9ABym4Z0m/H2TfpoJl2Gwn8ppWTChsrq9FgQAo4EvTLrznJ4RSs3fgR00XCa7EMtM+udNeFddCJjqbEQ2uDK9iR1CzheONvv08jnVpLXS+bi6EHB+3CGmxi818XOAN8zvJxz3+amJG1cXAs5NmryAy0z8t+a7jPcpJp28wRFioEm9KkXAFGflNS7hbMHiepOmG/glah6JKdMuYbfcGRxKL/CmSbfGucvTEaEKXwW2NR7BHr0910wSO5PueM/NzkXA9IiNhbeUGPeWhkyK+2i+Q4CvTNyHWx1ORJcnqjLECb7bnVcJ9iTsrtgFzwEmj3WHn6fdNtednBALfbTV11qg21GEIb7WtzoaxI3MAxr/JXBohnqd6cjtf4dTZZbDwHjgVOAsPcuLraAOg10z1qtdT6pDzMmSP++OzpKgQnDk96YsPShLIaebQgbTrNULqMMCda+Lnavxbao8Q2ywusJX4e3Ad6aQ/rJJcFyozC/HmrhOR1xJXS/y+josjcNAsE5Pb4p4n/caYH+nfDlhivIm9+oc9VRE/Fq9ydJw4UG8jA6d9Ie0wKhWXkLIga1kMHCFoxTTYpZjZ9BdmmchYa4zHIrCQIJn6c+413ihY+ODXAQE/xuQOUEmRlm4uAehPp557hCIqINMfjPkEhRwc4ItWaW6S3MZAlL3VMf0/wBv2KS1iVrVxQAAAABJRU5ErkJggg=="
+          alt="translation">
+      </button>
+
+      <button class="control-button" id="screen-share-btn" title="Share screen">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path
+            d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.11-.9-2-2-2H4c-1.11 0-2 .89-2 2v10c0 1.1.89 2 2 2H0v2h24v-2h-4zM4 16V6h16v10.01L4 16z" />
+        </svg>
+      </button>
+
+      <button class="control-button" id="captions-btn" title="Turn on captions">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path
+            d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z" />
+        </svg>
+      </button>
+
+      <button class="control-button" id="participants-btn" title="Show participants">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path
+            d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+        </svg>
+      </button>
+
+      <!-- Updated Settings Button with SVG Icon -->
+      <button class="control-button" id="settings-btn" title="Settings">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path
+            d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+        </svg>
+      </button>
+
+      <a href="{%url 'leave_meeting' room%}">
+        <button class="control-button" id="leave-btn" title="Leave meeting">
+          <svg viewBox="0 0 24 24" fill="white">
+            <path
+              d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+          </svg>
+        </button>
+      </a>
+    </section>
+
+    <div id="participants-panel" class="side-panel">
+      <div class="side-panel-header">
+        <h3>Participants</h3>
+      </div>
+      <div class="side-panel-content" id="participants-list">
+      </div>
+      <!-- {% if meeting.creator == user %}
+            <div class="participants-actions">
+                <button id="mute-all-btn" class="participants-action-btn">Mute All</button>
+                <button id="ask-unmute-btn" class="participants-action-btn" style="background: #fbbc05; color: #222;">Ask All to Unmute</button>
+            </div>
+            {% endif %} -->
+      <style>
+        /* Define colors for the button */
+        :root {
+          --primary-blue: #8ab4f8;
+          --primary-blue-hover: #a6caff;
+          /* Lighter blue for hover */
+          --text-on-primary: #202124;
+          /* Dark text for contrast */
+          --bg-dark: #202124;
+        }
+
+        /* Base button styles */
+        .participants-actions {
+          padding: 16px;
+          background-color: var(--bg-dark);
+          display: flex;
+          justify-content: center;
+        }
+
+        .participants-action-btn {
+          flex-grow: 1;
+          padding: 12px;
+          border-radius: 8px;
+          border: none;
+          font-size: 15px;
+          font-weight: 500;
+          cursor: pointer;
+          /* Smooth transition for visual effects */
+          transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        /* Specific styles for the copy button */
+        #copy-link-btn {
+          background-color: var(--primary-blue);
+          color: var(--text-on-primary);
+        }
+
+        /* --- HOVER EFFECT --- */
+        /* This runs when you move your mouse over the button */
+        #copy-link-btn:hover {
+          background-color: var(--primary-blue-hover);
+        }
+
+        /* --- PRESS EFFECT --- */
+        /* This runs when you click and hold the button */
+        #copy-link-btn:active {
+          transform: scale(0.98);
+          /* Makes the button slightly smaller */
+        }
+      </style>
+
+      <div class="participants-actions">
+        <button id="copy-link-btn" class="participants-action-btn">Copy Meeting Link</button>
+      </div>
+
+      <script>
+        // This script makes the button work
+        document.addEventListener('DOMContentLoaded', () => {
+          const copyButton = document.getElementById('copy-link-btn');
+
+          if (copyButton) {
+            copyButton.addEventListener('click', () => {
+              // --- THIS IS THE LINK THAT IS COPIED ---
+              // It gets the full URL of the current page.
+              const linkToCopy = window.location.href;
+
+              // Use the modern Navigator Clipboard API to copy the link
+              navigator.clipboard.writeText(linkToCopy).then(() => {
+                // --- VISUAL FEEDBACK ON SUCCESS ---
+                const originalText = copyButton.textContent;
+                copyButton.textContent = 'Copied!';
+
+                // Change the text back after 2 seconds
+                setTimeout(() => {
+                  copyButton.textContent = originalText;
+                }, 2000);
+
+              }).catch(err => {
+                console.error('Failed to copy link: ', err);
+                // Optional: Add feedback for when copying fails
+                copyButton.textContent = 'Copy Failed';
+              });
+            });
+          }
+        });
+      </script>
+    </div>
+
+    <div id="settings-panel" class="side-panel">
+      <div class="side-panel-header">
+        <h3>Settings</h3>
+      </div>
+      <div class="side-panel-content">
+        <div class="settings-section">
+          <h4>Your Language</h4>
+          <select id="user-language" class="settings-select">
+            <option value="en" {% if user.preferred_language == "EN" %}selected{% endif %}>English</option>
+            <option value="ar" {% if user.preferred_language == "AR" %}selected{% endif %}>Arabic</option>
+          </select>
+        </div>
+        <div class="settings-section">
+          <h4>Translate Captions</h4>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span>Off</span>
+            <img id="translate-captions-icon-off" width="42" height="42"
+              src="https://img.icons8.com/fluency/48/switch-off.png" alt="switch-off"
+              style="cursor:pointer; display:inline;">
+            <img id="translate-captions-icon-on" width="42" height="42"
+              src="https://img.icons8.com/fluency/48/switch-on.png" alt="switch-on"
+              style="cursor:pointer; display:none;">
+            <span>On</span>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h4>Dubbing Mode</h4>
+          <select id="dubbing-mode-select" class="settings-select">
+            <option value="fast">Fast (STT+TTS)</option>
+            <option value="accurate">Accurate (Dubbing)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="{% static 'assets/AgoraRTC_N-4.23.3.js' %}"></script>
+  <script>
+
+    // Initialize session storage with meeting data
+
+    try {
+
+      if (!("{{ room }}" && "{{ name }}" && "{{ uid }}")) {
+
+        throw new Error("Missing meeting data from server");
+
+      }
+
+      sessionStorage.setItem("room", "{{ room }}");
+
+      sessionStorage.setItem("name", "{{ name }}");
+
+      sessionStorage.setItem("UID", "{{ uid }}");
+
+      console.log("Session data initialized:", {
+
+        room: "{{ room }}",
+
+        name: "{{ name }}",
+
+        uid: "{{ uid }}",
+
+      });
+
+
+
+      // Set room name in UI - remove any URL parts and show only the room name
+
+      // const roomName = "{{ room }}".split("/").pop().replace(/-/g, " ");
+
+      // document.getElementById("room-name").textContent = roomName;
+
+
+
+      // Initialize UI controls
+
+      document.addEventListener("DOMContentLoaded", () => {
+
+        const videoStreams = document.getElementById("video-streams");
+
+
+
+        // Function to update grid layout based on participant count
+
+        function updateGridLayout(participantCount) {
+
+          if (participantCount === 1) {
+
+            document.body.classList.add("single-participant-mode");
+
+          } else {
+
+            document.body.classList.remove("single-participant-mode");
+
+          }
+
+          videoStreams.className = `participants-${participantCount}`;
+
+        }
+
+
+        const settingsBtn = document.getElementById("settings-btn");
+
+        const settingsPanel = document.getElementById("settings-panel");
+
+        const closeSettingsBtn = document.getElementById("close-settings");
+
+
+
+        if (settingsBtn && settingsPanel) {
+
+          settingsBtn.addEventListener("click", function () {
+
+            settingsPanel.classList.toggle("open");
+
+          });
+
+        }
+
+        if (closeSettingsBtn && settingsPanel) {
+
+          closeSettingsBtn.addEventListener("click", function () {
+
+            settingsPanel.classList.remove("open");
+
+          });
+
+        }
+
+
+
+
+        // Panel toggles
+
+        document
+
+          .getElementById("participants-btn")
+
+          .addEventListener("click", function () {
+
+            document
+
+              .getElementById("participants-panel")
+
+              .classList.toggle("open");
+
+          });
+
+
+
+        document
+
+          .getElementById("close-participants")
+
+          .addEventListener("click", function () {
+
+            document
+
+              .getElementById("participants-panel")
+
+              .classList.remove("open");
+
+          });
+
+
+
+        document
+
+          .getElementById("settings-btn")
+
+          .addEventListener("click", function () {
+
+            document.getElementById("settings-panel").classList.toggle("open");
+
+          });
+
+
+
+        document
+
+          .getElementById("close-settings")
+
+          .addEventListener("click", function () {
+
+            document.getElementById("settings-panel").classList.remove("open");
+
+          });
+
+      });
+
+    } catch (error) {
+
+      console.error("Error initializing session:", error);
+
+      document.getElementById("error-message").textContent =
+
+        "Error initializing meeting data";
+
+      document.getElementById("error-message").style.display = "block";
+
+    }
+
+
+
+
+
+
+
+
+
+    // // Initial state
+
+    // updateMicIcon(false);
+
+    // updateCameraIcon(false);
+
+
+
+
+  </script>
+
+
+
+
+
+  <script type="text/javascript" src="{% static 'js/streams.js' %}"></script>
+
+</body>
+
+</html>
