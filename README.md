@@ -2,8 +2,6 @@
 ## ✨ Overview
 **SAWA** is a full‑stack web application for hosting and joining online meetings. It leverages the **Agora Web SDK** for real‑time audio/video and integrates **captioning, language detection, translation, and optional dubbing** to make conversations more inclusive. Users can sign up with email (OTP supported), manage profiles & preferences, schedule or start instant meetings, and access a lightweight **dashboard** for activity and basic admin controls.
 
-> This README replaces the legacy version and reflects the current codebase and structure.
-
 ---
 
 ## 🧩 Key Features
